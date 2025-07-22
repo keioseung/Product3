@@ -964,7 +964,6 @@ export default function AdminAIInfoPage() {
                       </button>
                     </div>
                   </div>
-                  <div className="text-white/70 text-sm whitespace-pre-line bg-white/5 rounded-lg p-4">{b.content}</div>
                   <div className="text-white/50 text-xs mt-2">
                     생성일: {new Date(b.created_at).toLocaleDateString('ko-KR')}
                   </div>
