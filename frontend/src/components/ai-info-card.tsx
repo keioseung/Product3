@@ -241,22 +241,22 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
           </button>
         )}
       </div>
-      {/* 용어 학습 섹션 */}
-      {hasTerms && (
-        <div className="mb-4">
-          <button
-            onClick={() => setShowTerms(!showTerms)}
-            className="flex items-center gap-2 text-blue-300 hover:text-blue-200 text-sm font-medium mb-3"
-          >
-            <Brain className="w-4 h-4" />
-            {showTerms ? '용어 학습 숨기기' : '관련 용어 학습하기'}
-            {/* 항상 완료 개수 표시 */}
-            {hasTerms && (
-              <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full ml-2">
-                {actualLearnedTerms.size}개 학습완료
-              </span>
-            )}
-          </button>
+                {/* 용어 학습 섹션 */}
+          {hasTerms && (
+            <div className="mb-4">
+              <button
+                onClick={() => setShowTerms(!showTerms)}
+                className="flex items-center gap-2 text-green-300 hover:text-green-200 text-sm font-medium mb-3"
+              >
+                <Brain className="w-4 h-4" />
+                {showTerms ? '용어 학습 숨기기' : '관련 용어 학습하기'}
+                {/* 항상 완료 개수 표시 */}
+                {hasTerms && (
+                  <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full ml-2">
+                    {actualLearnedTerms.size}개 학습완료
+                  </span>
+                )}
+              </button>
           
           {showTerms && currentTerm && (
             <motion.div
@@ -272,27 +272,27 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                 </div>
                 <div className="w-full bg-white/20 rounded-full h-2">
                   <div
-                    className="h-2 bg-gradient-to-r from-blue-500 to-green-400 rounded-full"
+                    className="h-2 bg-gradient-to-r from-green-500 to-emerald-400 rounded-full"
                     style={{ width: `${((currentTermIndex + 1) / (info.terms?.length || 1)) * 100}%` }}
                   />
                 </div>
               </div>
               {/* 현재 용어 강조 */}
               <div className="text-center mb-3">
-                <div className="text-2xl font-extrabold text-blue-200 mb-2 animate-pulse">{currentTerm.term}</div>
+                <div className="text-2xl font-extrabold text-green-200 mb-2 animate-pulse">{currentTerm.term}</div>
                 <div className="text-white/80 text-base">{currentTerm.description}</div>
               </div>
               {/* 이전/다음 버튼 */}
               <div className="flex justify-between gap-2 mb-3">
                 <button
                   onClick={handlePrevTerm}
-                  className="px-3 py-1 bg-blue-400/80 text-white rounded-lg hover:bg-blue-500 transition text-sm font-medium"
+                  className="px-3 py-1 bg-green-400/80 text-white rounded-lg hover:bg-green-500 transition text-sm font-medium"
                 >
                   이전 용어
                 </button>
                 <button
                   onClick={handleNextTerm}
-                  className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium"
+                  className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm font-medium"
                 >
                   다음 용어
                 </button>
@@ -331,7 +331,7 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
                         }
                       }
                     }}
-                    className={`px-2 py-1 rounded text-xs font-bold border transition-all ${idx === currentTermIndex ? 'bg-green-500 text-white border-green-600' : actualLearnedTerms.has(term.term) ? 'bg-green-400/80 text-white border-green-500' : 'bg-white/20 text-white/70 border-white/30 hover:bg-blue-400/40'}`}
+                    className={`px-2 py-1 rounded text-xs font-bold border transition-all ${idx === currentTermIndex ? 'bg-green-500 text-white border-green-600' : actualLearnedTerms.has(term.term) ? 'bg-green-400/80 text-white border-green-500' : 'bg-white/20 text-white/70 border-white/30 hover:bg-green-400/40'}`}
                   >
                     {term.term}
                   </button>
@@ -357,8 +357,8 @@ function AIInfoCard({ info, index, date, sessionId, isLearned: isLearnedProp, on
             isLearned
               ? 'bg-green-500 text-white cursor-default'
               : isLearning
-                ? 'bg-blue-600 text-white cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
+                ? 'bg-green-600 text-white cursor-not-allowed'
+                : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600'
           }`}
         >
           <BookOpen className="w-4 h-4" />

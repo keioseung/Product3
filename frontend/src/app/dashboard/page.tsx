@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaBookOpen, FaCalendar, FaClipboard, FaBullseye, FaFire, FaStar, FaCrosshairs, FaChartBar } from 'react-icons/fa'
+import { FaChartLine, FaArrowRight, FaGlobe, FaCode, FaCoins, FaPiggyBank, FaMoneyBillWave, FaTrophy, FaLightbulb, FaUsers, FaBookOpen, FaCalendar, FaClipboard, FaBullseye, FaFire, FaStar, FaCrosshairs, FaChartBar } from 'react-icons/fa'
 import { TrendingUp, Calendar, Trophy, Sun, Target, BarChart3, BookOpen } from 'lucide-react'
 import Sidebar from '@/components/sidebar'
 import AIInfoCard from '@/components/ai-info-card'
@@ -18,56 +18,56 @@ import { userProgressAPI } from '@/lib/api'
 
 // 예시 용어 데이터
 const TERMS = [
-  { term: '딥러닝', desc: '인공신경망을 기반으로 한 기계학습의 한 분야로, 대량의 데이터에서 패턴을 학습합니다.' },
-  { term: '과적합', desc: '모델이 학습 데이터에 너무 맞춰져서 새로운 데이터에 일반화가 잘 안 되는 현상.' },
-  { term: '정규화', desc: '데이터의 범위를 일정하게 맞추거나, 모델의 복잡도를 제한하는 기법.' },
-  { term: '파라미터', desc: '모델이 학습을 통해 조정하는 값(가중치 등).' },
-  { term: '하이퍼파라미터', desc: '학습 전에 사람이 직접 설정하는 값(학습률, 배치 크기 등).' },
-  { term: '배치', desc: '한 번에 모델에 입력되는 데이터 묶음.' },
-  { term: '드롭아웃', desc: '신경망 학습 시 일부 뉴런을 임의로 꺼서 과적합을 방지하는 기법.' },
-  { term: '활성화 함수', desc: '신경망에서 입력 신호를 출력 신호로 변환하는 함수.' },
-  { term: '임베딩', desc: '고차원 데이터를 저차원 벡터로 변환하는 표현 방법.' },
-  { term: '컨볼루션', desc: '합성곱 신경망(CNN)에서 특징을 추출하는 연산.' },
+  { term: '복리', desc: '이자가 원금에 합쳐져서 그 합계 금액에 대해 다시 이자가 계산되는 방식입니다.' },
+  { term: '인플레이션', desc: '물가가 지속적으로 상승하여 화폐의 구매력이 감소하는 경제 현상.' },
+  { term: '포트폴리오', desc: '위험 분산을 위해 여러 종류의 투자 상품을 조합한 투자 구성.' },
+  { term: '주가수익비율', desc: '주가를 주당순이익으로 나눈 값으로 주식의 상대적 가치를 평가하는 지표.' },
+  { term: '채권', desc: '정부나 기업이 자금 조달을 위해 발행하는 부채 증서.' },
+  { term: '배당수익률', desc: '주당 배당금을 주가로 나눈 비율로 투자 수익성을 나타내는 지표.' },
+  { term: '자산배분', desc: '투자 목표와 위험 성향에 따라 주식, 채권 등 자산군별로 투자 비중을 정하는 것.' },
+  { term: '금리', desc: '돈을 빌려준 대가로 받는 이자의 비율.' },
+  { term: '환율', desc: '한 나라 화폐와 다른 나라 화폐 간의 교환 비율.' },
+  { term: '펀드', desc: '여러 투자자의 자금을 모아 전문가가 대신 운용하는 투자 상품.' },
 ]
 
 // 1. 주간 학습 현황 막대 그래프 컴포넌트 추가 (탭 위에)
 function WeeklyBarGraph({ weeklyData }: { weeklyData: any[] }) {
-  const maxAI = 3;
-  const maxTerms = 20;
-  const maxQuiz = 100;
-  return (
-    <div className="w-full max-w-3xl mx-auto mb-8">
-      <div className="flex justify-between mb-2 px-2">
-        {weeklyData.map((day, idx) => (
-          <div key={idx} className={`text-xs font-bold text-center ${day.isToday ? 'text-yellow-400' : 'text-white/60'}`}>{day.day}</div>
-        ))}
-      </div>
-      <div className="flex gap-2 h-32 items-end">
-        {weeklyData.map((day, idx) => {
-          const aiHeight = Math.round((day.ai / maxAI) * 80);
-          const termsHeight = Math.round((day.terms / maxTerms) * 80);
-          const quizHeight = Math.round((day.quiz / maxQuiz) * 80);
-          return (
-            <div key={idx} className="flex-1 flex flex-col items-center">
-              <div className="flex flex-col-reverse h-28 w-6 relative">
-                {/* 퀴즈 */}
-                <div style={{ height: `${quizHeight}px` }} className="w-full bg-gradient-to-t from-green-500 to-emerald-400 rounded-t-md" />
-                {/* 용어 */}
-                <div style={{ height: `${termsHeight}px` }} className="w-full bg-gradient-to-t from-purple-500 to-pink-400" />
-                {/* AI 정보 */}
-                <div style={{ height: `${aiHeight}px` }} className="w-full bg-gradient-to-t from-blue-500 to-cyan-400 rounded-b-md" />
-                {day.isToday && <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs text-yellow-400 font-bold">오늘</div>}
-              </div>
-              <div className="mt-1 text-xs text-white/70">{day.ai + day.terms + Math.round(day.quiz/10)}</div>
-            </div>
-          );
-        })}
-      </div>
-      <div className="flex justify-between mt-2 px-2 text-[10px] text-white/40">
-        <div>AI</div><div>용어</div><div>퀴즈</div>
-      </div>
-    </div>
-  );
+        const maxFinance = 3;
+      const maxTerms = 20;
+      const maxQuiz = 100;
+      return (
+        <div className="w-full max-w-3xl mx-auto mb-8">
+          <div className="flex justify-between mb-2 px-2">
+            {weeklyData.map((day, idx) => (
+              <div key={idx} className={`text-xs font-bold text-center ${day.isToday ? 'text-yellow-400' : 'text-white/60'}`}>{day.day}</div>
+            ))}
+          </div>
+          <div className="flex gap-2 h-32 items-end">
+            {weeklyData.map((day, idx) => {
+              const financeHeight = Math.round((day.ai / maxFinance) * 80);
+              const termsHeight = Math.round((day.terms / maxTerms) * 80);
+              const quizHeight = Math.round((day.quiz / maxQuiz) * 80);
+              return (
+                <div key={idx} className="flex-1 flex flex-col items-center">
+                  <div className="flex flex-col-reverse h-28 w-6 relative">
+                    {/* 퀴즈 */}
+                    <div style={{ height: `${quizHeight}px` }} className="w-full bg-gradient-to-t from-green-500 to-emerald-400 rounded-t-md" />
+                    {/* 용어 */}
+                    <div style={{ height: `${termsHeight}px` }} className="w-full bg-gradient-to-t from-emerald-500 to-green-400" />
+                    {/* 금융 정보 */}
+                    <div style={{ height: `${financeHeight}px` }} className="w-full bg-gradient-to-t from-teal-500 to-green-400 rounded-b-md" />
+                    {day.isToday && <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs text-yellow-400 font-bold">오늘</div>}
+                  </div>
+                  <div className="mt-1 text-xs text-white/70">{day.ai + day.terms + Math.round(day.quiz/10)}</div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex justify-between mt-2 px-2 text-[10px] text-white/40">
+            <div>금융</div><div>용어</div><div>퀴즈</div>
+          </div>
+        </div>
+      );
 }
 
 export default function DashboardPage() {
@@ -99,14 +99,14 @@ export default function DashboardPage() {
   const [typedText, setTypedText] = useState('')
   const [isTyping, setIsTyping] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const fullText = "AI Mastery Hub"
+  const fullText = "Finance Mastery Hub"
   
   // 환영 메시지 애니메이션
   const [currentWelcome, setCurrentWelcome] = useState(0)
   const welcomeMessages = [
-    "오늘도 AI 학습을 시작해보세요! 🚀",
+    "오늘도 금융 학습을 시작해보세요! 🚀",
     "새로운 지식이 여러분을 기다리고 있어요! 💡",
-    "함께 성장하는 AI 여정을 떠나볼까요? 🌟"
+    "함께 성장하는 금융 여정을 떠나볼까요? 🌟"
   ]
 
   const handleRandomTerm = () => {
@@ -284,11 +284,11 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 relative overflow-hidden px-4">
       {/* 고급스러운 배경 효과 */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(120,119,255,0.15),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.3),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.15),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(34,197,94,0.15),transparent_50%)]" />
       
       {/* 움직이는 파티클 효과 */}
       <div className="absolute inset-0 overflow-hidden">
@@ -325,18 +325,18 @@ export default function DashboardPage() {
         {/* 상단 아이콘과 제목 */}
         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-6 md:mb-8 text-center md:text-left">
           <div className="relative">
-            <span className="text-5xl md:text-6xl text-purple-400 drop-shadow-2xl animate-bounce-slow">
-              <FaRobot />
+            <span className="text-5xl md:text-6xl text-green-400 drop-shadow-2xl animate-bounce-slow">
+              <FaChartLine />
             </span>
-            <div className="absolute -top-2 -right-2 w-4 h-4 md:w-6 md:h-6 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-pulse" />
+            <div className="absolute -top-2 -right-2 w-4 h-4 md:w-6 md:h-6 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full animate-pulse" />
           </div>
           <div className="flex flex-col items-center md:items-start">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-green-200 to-emerald-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight">
               {typedText}
               {isTyping && <span className="animate-blink">|</span>}
             </h1>
             <div className="h-6 md:h-8 mt-2">
-              <p className="text-lg md:text-xl lg:text-2xl text-purple-300 font-medium animate-fade-in-out">
+              <p className="text-lg md:text-xl lg:text-2xl text-green-300 font-medium animate-fade-in-out">
                 {welcomeMessages[currentWelcome]}
               </p>
             </div>
@@ -344,19 +344,19 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 날짜 선택 (AI 정보 탭에서만 표시) */}
+      {/* 날짜 선택 (금융 정보 탭에서만 표시) */}
       {activeTab === 'ai' && (
         <div className="flex justify-center mb-6 md:mb-8">
           <div className="glass backdrop-blur-xl rounded-2xl px-4 md:px-8 py-3 md:py-4 flex items-center gap-4 md:gap-6 shadow-xl border border-white/10">
-            <FaCalendar className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
+            <FaCalendar className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
             <input 
               type="date" 
               value={selectedDate} 
               onChange={e => setSelectedDate(e.target.value)} 
-              className="p-2 md:p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm md:text-lg font-semibold shadow" 
+              className="p-2 md:p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-300 text-sm md:text-lg font-semibold shadow" 
               style={{ minWidth: 140, maxWidth: 180 }} 
             />
-            <span className="px-2 md:px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-xs md:text-sm shadow">
+            <span className="px-2 md:px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold text-xs md:text-sm shadow">
               {selectedDate === new Date().toISOString().split('T')[0] ? '오늘' : selectedDate}
             </span>
           </div>
@@ -367,11 +367,11 @@ export default function DashboardPage() {
       <div className="flex justify-center mb-6 md:mb-8">
         <div className="flex flex-wrap gap-2 md:gap-4 bg-white/10 backdrop-blur-xl rounded-2xl p-2 md:p-3 shadow-lg border border-white/10">
           {[
-            { id: 'ai', label: 'AI 정보', gradient: 'from-blue-500 to-purple-500' },
-            { id: 'quiz', label: '용어 퀴즈', gradient: 'from-purple-500 to-pink-500' },
-            { id: 'progress', label: '진행률', gradient: 'from-pink-500 to-blue-500' },
-            { id: 'news', label: 'AI 뉴스', gradient: 'from-blue-500 to-pink-500' },
-            { id: 'term', label: '용어 학습', gradient: 'from-purple-500 to-blue-500' }
+            { id: 'ai', label: '금융 정보', gradient: 'from-green-500 to-emerald-500' },
+            { id: 'quiz', label: '용어 퀴즈', gradient: 'from-emerald-500 to-green-500' },
+            { id: 'progress', label: '진행률', gradient: 'from-green-500 to-teal-500' },
+            { id: 'news', label: '금융 뉴스', gradient: 'from-teal-500 to-green-500' },
+            { id: 'term', label: '용어 학습', gradient: 'from-emerald-500 to-teal-500' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -409,7 +409,7 @@ export default function DashboardPage() {
                 {aiInfoFixed.length === 0 && (
                   <div className="glass backdrop-blur-xl rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center text-center text-white/70 shadow-xl min-h-[180px] border border-white/10">
                     <FaBookOpen className="w-10 h-10 md:w-12 md:h-12 mb-3 opacity-60" />
-                    <span className="text-base md:text-lg font-semibold">AI 정보가 없습니다</span>
+                    <span className="text-base md:text-lg font-semibold">금융 정보가 없습니다</span>
                   </div>
                 )}
                 {aiInfoFixed.map((info, index) => {
@@ -466,7 +466,7 @@ export default function DashboardPage() {
             <section className="mb-8 md:mb-16">
               <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-6 md:mb-8 flex items-center gap-3 md:gap-4 drop-shadow">
                 <FaBookOpen className="w-6 h-6 md:w-8 md:h-8" />
-                AI 뉴스
+                금융 뉴스
               </h2>
               {newsLoading ? (
                 <div className="text-white/80 text-center">뉴스를 불러오는 중...</div>
@@ -482,12 +482,12 @@ export default function DashboardPage() {
                     >
                       <h3 className="text-lg md:text-xl font-bold text-white mb-2 line-clamp-2">{item.title}</h3>
                       <p className="text-white/80 mb-2 line-clamp-3">{item.content}</p>
-                      <span className="text-blue-300 text-sm">뉴스 원문 보기 →</span>
+                      <span className="text-green-300 text-sm">뉴스 원문 보기 →</span>
                     </a>
                   ))}
                 </div>
               ) : (
-                <div className="text-white/70 text-center">AI 뉴스가 없습니다.</div>
+                <div className="text-white/70 text-center">금융 뉴스가 없습니다.</div>
               )}
             </section>
           )}

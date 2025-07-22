@@ -2,16 +2,16 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { FaRobot, FaArrowRight, FaGlobe, FaCode, FaBrain, FaRocket, FaChartLine, FaTrophy, FaLightbulb, FaUsers, FaCalendar, FaBullseye, FaCog, FaChartBar, FaComments, FaDatabase, FaStar } from 'react-icons/fa'
+import { FaChartLine, FaArrowRight, FaGlobe, FaCode, FaCoins, FaPiggyBank, FaMoneyBillWave, FaTrophy, FaLightbulb, FaUsers, FaCalendar, FaBullseye, FaCog, FaChartBar, FaComments, FaDatabase, FaStar } from 'react-icons/fa'
 
 const adminMenus = [
   { 
     href: '/admin/ai-info', 
-    label: 'AI 정보 관리', 
-    icon: FaBrain, 
-    desc: 'AI 정보 등록, 수정, 삭제 등', 
-    color: 'from-blue-500 to-cyan-500',
-    accent: 'blue',
+    label: '금융 정보 관리', 
+    icon: FaCoins, 
+    desc: '금융 정보 등록, 수정, 삭제 등', 
+    color: 'from-green-500 to-emerald-500',
+    accent: 'green',
     size: 'large',
     priority: 'high'
   },
@@ -21,8 +21,8 @@ const adminMenus = [
     label: '회원 관리', 
     icon: FaUsers, 
     desc: '회원 목록 조회, 역할 변경, 삭제 등', 
-    color: 'from-purple-500 to-indigo-500',
-    accent: 'purple',
+    color: 'from-emerald-500 to-teal-500',
+    accent: 'emerald',
     size: 'large',
     priority: 'high'
   },
@@ -70,7 +70,7 @@ export default function AdminPage() {
   // 환영 메시지 애니메이션
   const [currentWelcome, setCurrentWelcome] = useState(0)
   const welcomeMessages = [
-    "AI Mastery Hub를 관리하세요! 🚀",
+    "Finance Mastery Hub를 관리하세요! 🚀",
     "사용자들의 학습을 지원해보세요! 💡",
     "함께 성장하는 플랫폼을 만들어가요! 🌟"
   ]
@@ -130,11 +130,11 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 relative overflow-hidden">
       {/* 고급스러운 배경 효과 */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(120,119,255,0.15),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.3),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.15),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(34,197,94,0.15),transparent_50%)]" />
       
       {/* 움직이는 파티클 효과 */}
       <div className="absolute inset-0 overflow-hidden">
@@ -159,20 +159,20 @@ export default function AdminPage() {
           <div className="flex flex-col items-center gap-4 sm:gap-6 mb-8 sm:mb-12 text-center">
             <div className="relative">
               <div className="relative">
-                <span className="text-5xl sm:text-6xl md:text-7xl text-purple-400 drop-shadow-2xl animate-bounce-slow">
+                <span className="text-5xl sm:text-6xl md:text-7xl text-green-400 drop-shadow-2xl animate-bounce-slow">
                   <FaCog />
                 </span>
-                <div className="absolute -top-2 -right-2 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-pulse" />
-                <div className="absolute -bottom-1 -left-1 w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-ping" />
+                <div className="absolute -top-2 -right-2 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full animate-pulse" />
+                <div className="absolute -bottom-1 -left-1 w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-teal-400 to-green-500 rounded-full animate-ping" />
               </div>
             </div>
             <div className="flex flex-col items-center">
-              <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-white via-green-200 to-emerald-200 bg-clip-text text-transparent drop-shadow-2xl tracking-tight leading-tight">
                 {typedText}
                 {isTyping && <span className="animate-blink">|</span>}
               </h1>
               <div className="h-6 sm:h-8 mt-3 sm:mt-4">
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-purple-300 font-medium animate-fade-in-out">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-green-300 font-medium animate-fade-in-out">
                   {welcomeMessages[currentWelcome]}
                 </p>
               </div>
@@ -252,12 +252,12 @@ export default function AdminPage() {
           {/* 하단 통계 - 개선된 디자인 */}
           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 md:gap-8 mt-8 sm:mt-12 md:mt-16">
             <div className="flex items-center gap-2 sm:gap-3 text-white/60 text-xs sm:text-sm md:text-base bg-white/5 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10">
-              <FaGlobe className="text-purple-400" />
+              <FaGlobe className="text-green-400" />
               <span>관리자 전용 대시보드</span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 text-white/60 text-xs sm:text-sm md:text-base bg-white/5 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10">
-              <FaRocket className="text-pink-400" />
-              <span>AI Mastery Hub 관리</span>
+              <FaPiggyBank className="text-emerald-400" />
+              <span>Finance Mastery Hub 관리</span>
             </div>
           </div>
         </div>

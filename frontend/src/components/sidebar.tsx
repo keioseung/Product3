@@ -93,7 +93,7 @@ function Sidebar({ selectedDate, onDateChange, sessionId }: SidebarProps) {
         <div className="space-y-6">
           {/* 헤더 */}
           <div className="text-center">
-            <h2 className="text-2xl font-bold gradient-text">AI Mastery Hub</h2>
+            <h2 className="text-2xl font-bold gradient-text">Finance Mastery Hub</h2>
             <p className="text-white/70 text-sm">학습 관리</p>
           </div>
 
@@ -146,10 +146,10 @@ function Sidebar({ selectedDate, onDateChange, sessionId }: SidebarProps) {
             <>
               <button
                 onClick={() => setIsAddingInfo(!isAddingInfo)}
-                className="w-full flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all"
+                className="w-full flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all"
               >
                 <Plus className="w-5 h-5" />
-                AI 정보 추가
+                금융 정보 추가
               </button>
 
               {isAddingInfo && (
@@ -197,7 +197,7 @@ function Sidebar({ selectedDate, onDateChange, sessionId }: SidebarProps) {
             <div>
               <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
                 <Brain className="w-5 h-5" />
-                최신 AI 뉴스
+                최신 금융 뉴스
               </h3>
               <div className="space-y-3">
                 {news.slice(0, 3).map((item: { title: string; content: string }, index: number) => (
