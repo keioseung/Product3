@@ -530,7 +530,7 @@ export default function AdminAIInfoPage() {
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-3">
               <FaBrain className="text-blue-400" />
-              AI 정보 관리 (DB 저장)
+              금융 정보 관리 (DB 저장)
             </h1>
             <p className="text-white/70 mt-1">AI 정보, 프롬프트, 기반 내용을 데이터베이스에 저장하여 관리합니다</p>
           </div>
@@ -555,11 +555,11 @@ export default function AdminAIInfoPage() {
             </div>
           )}
 
-          {/* AI 정보 관리 */}
+          {/* 금융 정보 관리 */}
           <section className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
             <h2 className="text-2xl font-bold mb-6 text-white flex items-center gap-2">
               <FaBrain className="text-blue-400" />
-              AI 정보 관리
+              금융 정보 관리
             </h2>
             
             <form onSubmit={handleSubmit} className="mb-8 bg-white/5 rounded-xl p-6 border border-white/10 flex flex-col gap-6">

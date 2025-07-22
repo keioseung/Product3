@@ -98,7 +98,7 @@ export default function UserManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 flex items-center justify-center">
         <div className="text-white text-xl">사용자 목록을 불러오는 중...</div>
       </div>
     )
@@ -189,7 +189,7 @@ export default function UserManagementPage() {
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                           user.role === 'admin' 
                             ? 'bg-gradient-to-r from-red-500 to-pink-500' 
-                            : 'bg-gradient-to-r from-blue-500 to-purple-500'
+                            : 'bg-gradient-to-r from-blue-500 to-emerald-500'
                         }`}>
                           {user.role === 'admin' ? <FaUserShield className="text-white" /> : <FaUser className="text-white" />}
                           </div>
@@ -249,7 +249,7 @@ export default function UserManagementPage() {
                     <div className={`w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center ${
                       user.role === 'admin' 
                         ? 'bg-gradient-to-r from-red-500 to-pink-500' 
-                        : 'bg-gradient-to-r from-blue-500 to-purple-500'
+                        : 'bg-gradient-to-r from-blue-500 to-emerald-500'
                     }`}>
                       {user.role === 'admin' ? <FaUserShield className="text-white text-xs sm:text-base" /> : <FaUser className="text-white text-xs sm:text-base" />}
                     </div>

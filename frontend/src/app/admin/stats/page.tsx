@@ -230,7 +230,7 @@ export default function AdminStatsPage() {
                     <div className="flex gap-2">
                       <div className="flex-1">
                         <div className="text-xs text-white/70 mb-1">사용자</div>
-                        <ProgressBar value={day.users} max={25} color="bg-gradient-to-r from-purple-400 to-purple-600" />
+                        <ProgressBar value={day.users} max={25} color="bg-gradient-to-r from-green-400 to-emerald-600" />
                       </div>
                       <div className="flex-1">
                         <div className="text-xs text-white/70 mb-1">퀴즈</div>
@@ -239,7 +239,7 @@ export default function AdminStatsPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-purple-400 text-sm">{day.users}</div>
+                    <div className="text-green-400 text-sm">{day.users}</div>
                     <div className="text-blue-400 text-sm">{day.quizzes}</div>
                   </div>
                 </div>
