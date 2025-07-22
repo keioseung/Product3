@@ -338,9 +338,9 @@ export const promptAPI = {
 
 // Base Content API
 export const baseContentAPI = {
-  getAll: () => api.get('/api/base-content/'),
-  add: (data: any) => api.post('/api/base-content/', data),
-  update: (id: number, data: any) => api.put(`/api/base-content/${id}`, data),
-  delete: (id: number) => api.delete(`/api/base-content/${id}`),
-  getByCategory: (category: string) => api.get(`/api/base-content/category/${category}`),
+  getAll: () => api.get('/api/base_content/'),
+  add: (data: any) => api.post('/api/base_content/', data),
+  update: (id: number, data: any) => api.put(`/api/base_content/${id}`, data),
+  delete: (id: number) => api.delete(`/api/base_content/${id}`),
+  getByCategory: (category: string) => api.get(`/api/base_content/category/${category}`),
 } 

@@ -8,13 +8,18 @@ from app.api import ai_info, quiz, prompt, base_content, term, auth, logs, syste
 
 app = FastAPI()
 
-# CORS 설정 - Railway 배포 환경에 맞게 조정 (임시로 관대한 설정)
+# CORS 설정 - Railway 배포 환경에 맞게 조정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 임시로 모든 origin 허용
+    allow_origins=[
+        "*",  # 모든 origin 허용
+        "http://localhost:3000",
+        "https://product2-production-644f.up.railway.app",  # 프론트엔드 도메인 명시적 추가
+        "https://*.up.railway.app",  # Railway 도메인 패턴
+    ],
     allow_credentials=True,
-    allow_methods=["*"],  # 모든 메서드 허용
-    allow_headers=["*"],  # 모든 헤더 허용
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # 명시적 메서드 지정
+    allow_headers=["*"],
     expose_headers=["*"],
 )
 
@@ -90,5 +95,5 @@ app.include_router(user_progress.router, prefix="/api/user-progress", tags=["Use
 app.include_router(ai_info.router, prefix="/api/ai-info")
 app.include_router(quiz.router, prefix="/api/quiz")
 app.include_router(prompt.router, prefix="/api/prompt")
-app.include_router(base_content.router, prefix="/api/base-content")
+app.include_router(base_content.router, prefix="/api/base_content")
 app.include_router(term.router, prefix="/api/term")

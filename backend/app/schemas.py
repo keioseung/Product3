@@ -122,7 +122,7 @@ class BaseContentResponse(BaseModel):
     title: str
     content: str
     category: str
-    created_at: str
+    created_at: datetime
 
     class Config:
         from_attributes = True 

@@ -28,6 +28,32 @@ def run_database_init():
             print("⚠️ 데이터베이스 초기화 실패 (서버는 계속 시작)")
             print(f"오류: {result.stderr}")
             return False
+
+def run_database_migration():
+    """데이터베이스 마이그레이션 실행"""
+    try:
+        print("🔧 데이터베이스 마이그레이션 시작...")
+        result = subprocess.run(
+            [sys.executable, "migrate_db.py"], 
+            capture_output=True, 
+            text=True, 
+            timeout=60  # 1분 타임아웃
+        )
+        
+        if result.returncode == 0:
+            print("✅ 데이터베이스 마이그레이션 성공")
+            print(result.stdout)
+            return True
+        else:
+            print("⚠️ 데이터베이스 마이그레이션 실패 (서버는 계속 시작)")
+            print(f"오류: {result.stderr}")
+            return False
+    except subprocess.TimeoutExpired:
+        print("⏰ 데이터베이스 마이그레이션 타임아웃 (서버는 계속 시작)")
+        return False
+    except Exception as e:
+        print(f"❌ 데이터베이스 마이그레이션 중 예상치 못한 오류: {e}")
+        return False
             
     except subprocess.TimeoutExpired:
         print("⏰ 데이터베이스 초기화 타임아웃 (서버는 계속 시작)")
@@ -62,6 +88,9 @@ def main():
         print("🔄 대체 방법으로 테이블 생성 시도...")
         # 데이터베이스 초기화 시도 2: 직접 테이블 생성
         create_tables_directly()
+    
+    # 데이터베이스 마이그레이션 실행 (created_at 컬럼 추가 등)
+    run_database_migration()
     
     # 환경변수에서 포트 가져오기 (Railway는 PORT 환경변수 사용)
     port = os.getenv("PORT", "8000")

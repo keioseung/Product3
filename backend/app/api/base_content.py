@@ -19,42 +19,59 @@ def options_base_content():
 
 @router.post("/", response_model=BaseContentResponse)
 def add_base_content(content_data: BaseContentCreate, db: Session = Depends(get_db)):
-    from datetime import datetime
-    
-    db_content = BaseContent(
-        title=content_data.title,
-        content=content_data.content,
-        category=content_data.category,
-        created_at=datetime.now()
-    )
-    db.add(db_content)
-    db.commit()
-    db.refresh(db_content)
-    return db_content
+    try:
+        db_content = BaseContent(
+            title=content_data.title,
+            content=content_data.content,
+            category=content_data.category
+            # created_at은 자동으로 설정됨 (server_default)
+        )
+        db.add(db_content)
+        db.commit()
+        db.refresh(db_content)
+        return db_content
+    except Exception as e:
+        db.rollback()
+        print(f"Error creating base content: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to create base content: {str(e)}")
+
+@router.options("/{content_id}")
+def options_base_content_by_id():
+    return Response(status_code=200)
 
 @router.put("/{content_id}", response_model=BaseContentResponse)
 def update_base_content(content_id: int, content_data: BaseContentCreate, db: Session = Depends(get_db)):
-    content = db.query(BaseContent).filter(BaseContent.id == content_id).first()
-    if not content:
-        raise HTTPException(status_code=404, detail="Base content not found")
-    
-    content.title = content_data.title
-    content.content = content_data.content
-    content.category = content_data.category
-    
-    db.commit()
-    db.refresh(content)
-    return content
+    try:
+        content = db.query(BaseContent).filter(BaseContent.id == content_id).first()
+        if not content:
+            raise HTTPException(status_code=404, detail="Base content not found")
+        
+        content.title = content_data.title
+        content.content = content_data.content
+        content.category = content_data.category
+        
+        db.commit()
+        db.refresh(content)
+        return content
+    except Exception as e:
+        db.rollback()
+        print(f"Error updating base content: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to update base content: {str(e)}")
 
 @router.delete("/{content_id}")
 def delete_base_content(content_id: int, db: Session = Depends(get_db)):
-    content = db.query(BaseContent).filter(BaseContent.id == content_id).first()
-    if not content:
-        raise HTTPException(status_code=404, detail="Base content not found")
-    
-    db.delete(content)
-    db.commit()
-    return {"message": "Base content deleted successfully"}
+    try:
+        content = db.query(BaseContent).filter(BaseContent.id == content_id).first()
+        if not content:
+            raise HTTPException(status_code=404, detail="Base content not found")
+        
+        db.delete(content)
+        db.commit()
+        return {"message": "Base content deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        print(f"Error deleting base content: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete base content: {str(e)}")
 
 @router.get("/category/{category}", response_model=List[BaseContentResponse])
 def get_base_contents_by_category(category: str, db: Session = Depends(get_db)):
