@@ -236,7 +236,7 @@ export default function AdminPage() {
                     )}
                     
                     {/* 액션 버튼 */}
-                    <div className="flex items-center gap-2 mt-auto text-purple-300 group-hover:text-purple-200 transition-colors duration-300">
+                    <div className="flex items-center gap-2 mt-auto text-green-300 group-hover:text-green-200 transition-colors duration-300">
                       <span className="text-xs sm:text-sm md:text-base font-semibold">관리하기</span>
                       <FaArrowRight className="text-xs sm:text-sm md:text-base group-hover:translate-x-2 transition-transform duration-300" />
                     </div>
