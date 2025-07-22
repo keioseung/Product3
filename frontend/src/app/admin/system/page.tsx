@@ -238,9 +238,9 @@ export default function SystemManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 relative overflow-hidden">
       {/* 배경 효과 */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.3),transparent_50%)]" />
 
       <div className="relative z-10 p-6">
         {/* 헤더 */}
@@ -349,7 +349,7 @@ export default function SystemManagementPage() {
           {/* 시스템 설정 */}
           <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
             <h2 className="text-white font-bold text-xl mb-6 flex items-center gap-2">
-              <FaPalette className="text-purple-400" />
+              <FaPalette className="text-green-400" />
               시스템 설정
             </h2>
 
@@ -360,7 +360,7 @@ export default function SystemManagementPage() {
                 <select
                   value={settings.theme}
                   onChange={(e) => setSettings({ ...settings, theme: e.target.value })}
-                  className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
                 >
                   <option value="dark" className="bg-gray-800">다크 모드</option>
                   <option value="light" className="bg-gray-800">라이트 모드</option>
@@ -374,7 +374,7 @@ export default function SystemManagementPage() {
                 <select
                   value={settings.language}
                   onChange={(e) => setSettings({ ...settings, language: e.target.value })}
-                  className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
                 >
                   <option value="ko" className="bg-gray-800">한국어</option>
                   <option value="en" className="bg-gray-800">English</option>
@@ -407,7 +407,7 @@ export default function SystemManagementPage() {
                   <select
                     value={settings.backupInterval}
                     onChange={(e) => setSettings({ ...settings, backupInterval: e.target.value })}
-                    className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
                   >
                     <option value="6" className="bg-gray-800">6시간</option>
                     <option value="12" className="bg-gray-800">12시간</option>
@@ -426,7 +426,7 @@ export default function SystemManagementPage() {
                   max="50"
                   value={settings.maxBackups}
                   onChange={(e) => setSettings({ ...settings, maxBackups: parseInt(e.target.value) || 10 })}
-                  className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
                 />
               </div>
 
@@ -469,7 +469,7 @@ export default function SystemManagementPage() {
               {/* 설정 저장 */}
               <button
                 onClick={saveSettings}
-                className="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2"
               >
                 <FaSave className="w-4 h-4" />
                 설정 저장

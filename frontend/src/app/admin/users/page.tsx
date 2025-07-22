@@ -105,9 +105,9 @@ export default function UserManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 relative overflow-hidden">
       {/* 배경 효과 */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.3),transparent_50%)]" />
 
       <div className="relative z-10 p-3 sm:p-6 lg:p-8">
         {/* 헤더 - 모바일에서 컴팩트하게 */}
@@ -121,10 +121,10 @@ export default function UserManagementPage() {
             </button>
             <div>
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-6 h-6 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                <div className="w-6 h-6 sm:w-10 sm:h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <FaUsers className="text-sm sm:text-xl text-white" />
                 </div>
-                <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
+                <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-white via-green-200 to-emerald-200 bg-clip-text text-transparent">
                 회원 관리
               </h1>
               </div>
@@ -143,7 +143,7 @@ export default function UserManagementPage() {
                 placeholder="사용자명 또는 이메일로 검색..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-8 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 bg-white/10 border border-white/20 rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all text-sm sm:text-base"
+                className="w-full pl-8 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 bg-white/10 border border-white/20 rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all text-sm sm:text-base"
             />
             </div>
           </div>
@@ -163,7 +163,7 @@ export default function UserManagementPage() {
         <div className="bg-white/10 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/20 overflow-hidden">
           <div className="p-3 sm:p-6 border-b border-white/10">
             <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2 sm:gap-3">
-              <FaUsers className="text-purple-400 text-sm sm:text-base" />
+              <FaUsers className="text-green-400 text-sm sm:text-base" />
               전체 사용자 ({filteredUsers.length}명)
             </h2>
             </div>
@@ -206,7 +206,7 @@ export default function UserManagementPage() {
                         <select
                           value={user.role}
                         onChange={(e) => handleRoleChange(user.id, e.target.value as 'admin' | 'user')}
-                          className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                          className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500/50"
                         >
                         <option value="user">일반 사용자</option>
                         <option value="admin">관리자</option>
@@ -275,7 +275,7 @@ export default function UserManagementPage() {
                     <select
                       value={user.role}
                       onChange={(e) => handleRoleChange(user.id, e.target.value as 'admin' | 'user')}
-                      className="w-full mt-1 bg-white/10 border border-white/20 rounded-lg px-2 sm:px-3 py-1 sm:py-2 text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                      className="w-full mt-1 bg-white/10 border border-white/20 rounded-lg px-2 sm:px-3 py-1 sm:py-2 text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-500/50"
                     >
                       <option value="user">일반 사용자</option>
                       <option value="admin">관리자</option>

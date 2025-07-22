@@ -87,9 +87,9 @@ export default function AdminStatsPage() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 relative overflow-hidden">
       {/* 배경 효과 */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.3),transparent_50%)]" />
 
       <div className="relative z-10 p-6">
         {/* 헤더 */}
@@ -145,7 +145,7 @@ export default function AdminStatsPage() {
                 <div className="text-3xl font-bold text-white">{stats.totalUsers}</div>
                 <div className="text-white/70 text-sm">총 사용자</div>
               </div>
-              <FaUsers className="w-8 h-8 text-purple-400" />
+              <FaUsers className="w-8 h-8 text-green-400" />
             </div>
             <div className="text-green-400 text-sm">+{Math.floor(stats.totalUsers * 0.1)} 이번 주</div>
           </div>
@@ -167,9 +167,9 @@ export default function AdminStatsPage() {
                 <div className="text-3xl font-bold text-white">{stats.totalQuizzes}</div>
                 <div className="text-white/70 text-sm">총 퀴즈</div>
               </div>
-              <FaClipboard className="w-8 h-8 text-indigo-400" />
+              <FaClipboard className="w-8 h-8 text-emerald-400" />
             </div>
-            <div className="text-purple-400 text-sm">다양한 주제</div>
+            <div className="text-green-400 text-sm">다양한 주제</div>
           </div>
 
           <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
@@ -259,7 +259,7 @@ export default function AdminStatsPage() {
               <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-purple-300 font-medium">{activity.user}</span>
+                  <span className="text-green-300 font-medium">{activity.user}</span>
                   <span className="text-white/70">{activity.action}</span>
                 </div>
                 <span className="text-white/50 text-sm">{activity.time}</span>

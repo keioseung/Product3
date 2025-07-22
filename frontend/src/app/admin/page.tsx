@@ -196,7 +196,7 @@ export default function AdminPage() {
                     text-left flex flex-col 
                     transition-all duration-500 
                     hover:scale-105 hover:rotate-1
-                    hover:shadow-2xl hover:shadow-purple-500/25
+                    hover:shadow-2xl hover:shadow-green-500/25
                     active:scale-95
                     backdrop-blur-xl
                     relative overflow-hidden

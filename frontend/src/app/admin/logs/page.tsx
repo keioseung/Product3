@@ -158,7 +158,7 @@ export default function LogsManagementPage() {
   // 로그 타입 아이콘
   const getTypeIcon = (type: LogEntry['type']) => {
     switch (type) {
-      case 'user': return <FaUser className="text-purple-400" />
+      case 'user': return <FaUser className="text-green-400" />
       case 'system': return <FaCog className="text-cyan-400" />
       case 'security': return <FaExclamationTriangle className="text-red-400" />
       default: return <FaInfoCircle className="text-gray-400" />
@@ -178,9 +178,9 @@ export default function LogsManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 relative overflow-hidden">
       {/* 배경 효과 */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.3),transparent_50%)]" />
 
       <div className="relative z-10 p-6">
         {/* 헤더 */}
@@ -229,14 +229,14 @@ export default function LogsManagementPage() {
                 placeholder="로그 검색..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50"
               />
             </div>
 
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500/50"
+              className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
             >
               <option value="all" className="bg-gray-800">모든 타입</option>
               <option value="user" className="bg-gray-800">사용자</option>
@@ -248,7 +248,7 @@ export default function LogsManagementPage() {
             <select
               value={levelFilter}
               onChange={(e) => setLevelFilter(e.target.value)}
-              className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500/50"
+              className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
             >
               <option value="all" className="bg-gray-800">모든 레벨</option>
               <option value="info" className="bg-gray-800">정보</option>
@@ -261,7 +261,7 @@ export default function LogsManagementPage() {
               type="date"
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500/50"
+              className="px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
             />
           </div>
         </div>
@@ -295,7 +295,7 @@ export default function LogsManagementPage() {
             <div className="text-white/70 text-sm">경고</div>
           </div>
           <div className="bg-white/10 backdrop-blur-xl rounded-xl p-4 border border-white/20">
-            <div className="text-2xl font-bold text-purple-400">{stats.by_type.user}</div>
+            <div className="text-2xl font-bold text-green-400">{stats.by_type.user}</div>
             <div className="text-white/70 text-sm">사용자 활동</div>
           </div>
         </div>
@@ -327,12 +327,12 @@ export default function LogsManagementPage() {
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-white font-medium">{log.action}</span>
                         {log.user && (
-                          <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs">
+                          <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded text-xs">
                             {log.user}
                           </span>
                         )}
                         <span className={`px-2 py-1 rounded text-xs ${
-                          log.type === 'user' ? 'bg-purple-500/20 text-purple-300' :
+                          log.type === 'user' ? 'bg-green-500/20 text-green-300' :
                           log.type === 'system' ? 'bg-cyan-500/20 text-cyan-300' :
                           log.type === 'security' ? 'bg-red-500/20 text-red-300' :
                           'bg-gray-500/20 text-gray-300'

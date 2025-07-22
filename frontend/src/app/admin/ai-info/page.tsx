@@ -513,10 +513,10 @@ export default function AdminAIInfoPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 relative overflow-hidden">
       {/* 배경 효과 */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.3),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.15),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.3),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(16,185,129,0.15),transparent_50%)]" />
 
       <div className="relative z-10 p-6">
         {/* 헤더 */}
@@ -570,7 +570,7 @@ export default function AdminAIInfoPage() {
                     type="date" 
                     value={date} 
                     onChange={e => setDate(e.target.value)} 
-                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
+                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50" 
                   />
                 </div>
               </div>
@@ -585,7 +585,7 @@ export default function AdminAIInfoPage() {
                         placeholder={`제목 ${idx+1}`} 
                         value={input.title} 
                         onChange={e => handleInputChange(idx, 'title', e.target.value)} 
-                        className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
+                        className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50" 
                       />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -594,7 +594,7 @@ export default function AdminAIInfoPage() {
                         placeholder={`내용 ${idx+1}`} 
                         value={input.content} 
                         onChange={e => handleInputChange(idx, 'content', e.target.value)} 
-                        className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none" 
+                        className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 resize-none" 
                         rows={3} 
                       />
                     </div>
@@ -607,7 +607,7 @@ export default function AdminAIInfoPage() {
                           <button 
                             type="button" 
                             onClick={() => handleBulkTermsInput(idx)} 
-                            className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg font-medium hover:bg-purple-500/30 transition text-sm border border-purple-500/30"
+                            className="px-3 py-1 bg-green-500/20 text-green-300 rounded-lg font-medium hover:bg-green-500/30 transition text-sm border border-green-500/30"
                             title="전문용어를 복사해서 붙여넣기"
                           >
                             📋 일괄 입력
@@ -650,7 +650,7 @@ export default function AdminAIInfoPage() {
                             value={bulkTermsText}
                             onChange={(e) => setBulkTermsText(e.target.value)}
                             placeholder="용어	뜻&#10;LLM	GPT 같은 대형 언어 모델&#10;자연어	우리가 일상에서 쓰는 언어"
-                            className="w-full p-3 bg-white/10 border border-yellow-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 text-sm resize-none"
+                            className="w-full p-3 bg-white/10 border border-green-500/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 text-sm resize-none"
                             rows={6}
                           />
                           <div className="flex gap-2 mt-3">
@@ -680,14 +680,14 @@ export default function AdminAIInfoPage() {
                               placeholder="용어" 
                               value={term.term} 
                               onChange={e => handleTermChange(idx, termIdx, 'term', e.target.value)} 
-                              className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm" 
+                              className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 text-sm" 
                             />
                             <input 
                               type="text" 
                               placeholder="용어 설명" 
                               value={term.description} 
                               onChange={e => handleTermChange(idx, termIdx, 'description', e.target.value)} 
-                              className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm" 
+                              className="flex-1 p-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 text-sm" 
                             />
                           </div>
                           <button 
@@ -731,7 +731,7 @@ export default function AdminAIInfoPage() {
               <button 
                 type="submit" 
                 disabled={addOrUpdateMutation.isPending} 
-                className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-600 transition w-full text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="mt-4 px-6 py-3 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-xl font-medium hover:from-blue-600 hover:to-green-600 transition w-full text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <FaSave className="w-4 h-4" />
                 {addOrUpdateMutation.isPending ? '등록 중...' : (editId ? '수정' : '등록')}
@@ -823,7 +823,7 @@ export default function AdminAIInfoPage() {
                     placeholder="프롬프트 제목" 
                     value={promptTitle} 
                     onChange={e => setPromptTitle(e.target.value)} 
-                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500/50" 
+                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50" 
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -832,7 +832,7 @@ export default function AdminAIInfoPage() {
                     placeholder="프롬프트 내용" 
                     value={promptContent} 
                     onChange={e => setPromptContent(e.target.value)} 
-                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-pink-500/50 resize-none" 
+                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 resize-none" 
                     rows={3} 
                   />
                 </div>
@@ -841,7 +841,7 @@ export default function AdminAIInfoPage() {
                 <button 
                   type="submit" 
                   disabled={promptMutation.isPending}
-                  className="px-6 py-2 bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-medium transition flex items-center gap-2 disabled:opacity-50"
+                  className="px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition flex items-center gap-2 disabled:opacity-50"
                 >
                   <FaSave className="w-4 h-4" />
                   {promptMutation.isPending ? '저장 중...' : (promptEditId ? '수정' : '등록')}
@@ -989,7 +989,7 @@ export default function AdminAIInfoPage() {
                   <select 
                     value={selectedPromptId || ''} 
                     onChange={e => setSelectedPromptId(e.target.value ? Number(e.target.value) : null)} 
-                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
                   >
                     <option value="" className="bg-gray-800">프롬프트 선택</option>
                     {prompts.map(p => <option key={p.id} value={p.id} className="bg-gray-800">{p.title}</option>)}
@@ -1001,7 +1001,7 @@ export default function AdminAIInfoPage() {
                   <select 
                     value={selectedBaseId || ''} 
                     onChange={e => setSelectedBaseId(e.target.value ? Number(e.target.value) : null)} 
-                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                    className="p-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
                   >
                     <option value="" className="bg-gray-800">기반 내용 선택(선택사항)</option>
                     {baseContents.map(b => <option key={b.id} value={b.id} className="bg-gray-800">{b.title}</option>)}
@@ -1012,7 +1012,7 @@ export default function AdminAIInfoPage() {
               <button 
                 onClick={handleCopyAndGo} 
                 disabled={!selectedPromptId} 
-                className="w-full px-6 py-3 bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-500 disabled:opacity-50 text-white rounded-lg font-medium transition flex items-center justify-center gap-2"
+                className="w-full px-6 py-3 bg-green-500 hover:bg-green-600 disabled:bg-gray-500 disabled:opacity-50 text-white rounded-lg font-medium transition flex items-center justify-center gap-2"
               >
                 <FaCopy className="w-4 h-4" />
                 ChatGPT에 물어보기
