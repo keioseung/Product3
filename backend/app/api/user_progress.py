@@ -264,11 +264,16 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         UserProgress.date.like(f'__terms__{today}%')
     ).all()
     
+    print(f"🔍 오늘 용어 학습 조회: {today} - {len(today_terms_progress)}개 기록")
+    
     for term_progress in today_terms_progress:
         if term_progress.learned_info:
             try:
-                today_terms += len(json.loads(term_progress.learned_info))
+                learned_data = json.loads(term_progress.learned_info)
+                today_terms += len(learned_data)
+                print(f"📚 오늘 용어 학습: {term_progress.date} - {len(learned_data)}개")
             except json.JSONDecodeError:
+                print(f"❌ 오늘 용어 JSON 파싱 에러: {term_progress.date}")
                 continue
     
     # 오늘 퀴즈 점수 누적 계산
@@ -338,12 +343,16 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         UserProgress.date.like('__terms__%')
     ).all()
     
+    print(f"🔍 전체 용어 학습 조회: {len(all_terms_progress)}개 기록")
+    
     for p in all_terms_progress:
         if p.learned_info:
             try:
                 learned_data = json.loads(p.learned_info)
                 total_terms_available += len(learned_data)
+                print(f"📚 전체 용어 학습: {p.date} - {len(learned_data)}개 (누적: {total_terms_available})")
             except json.JSONDecodeError:
+                print(f"❌ 전체 용어 JSON 파싱 에러: {p.date}")
                 continue
     
     if progress and progress.stats:
@@ -356,6 +365,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
             'today_quiz_total': today_quiz_total,
             'total_ai_info_available': total_ai_info_available,
             'total_terms_available': total_terms_available,
+            'total_terms_learned': total_terms_available,  # 누적 총 용어 학습 수 추가
             'cumulative_quiz_score': cumulative_quiz_score,
             'total_quiz_correct': total_quiz_correct,
             'total_quiz_questions': total_quiz_questions
@@ -375,6 +385,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         'today_quiz_total': today_quiz_total,
         'total_ai_info_available': total_ai_info_available,
         'total_terms_available': total_terms_available,
+        'total_terms_learned': total_terms_available,  # 누적 총 용어 학습 수 추가
         'cumulative_quiz_score': cumulative_quiz_score,
         'total_quiz_correct': total_quiz_correct,
         'total_quiz_questions': total_quiz_questions
