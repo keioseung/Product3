@@ -75,16 +75,27 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
   })
 
   // 진단용: 실제로 받아오는 기간별 학습 데이터와 파라미터 콘솔 출력
-  console.log('periodStats API 파라미터', sessionId, periodDates.start, periodDates.end);
+  console.log('🔍 periodStats API 파라미터:', sessionId, periodDates.start, periodDates.end);
+  console.log('📊 periodStats 전체 데이터:', periodStats);
+  
   if (Array.isArray(periodStats?.period_data)) {
+    console.log(`📈 기간별 데이터 총 ${periodStats.period_data.length}일`);
     periodStats.period_data.forEach((d, i) => {
-      console.log(`Day ${i}:`, d.date, 'AI:', d.ai_info, 'Terms:', d.terms, 'Quiz:', d.quiz_score);
+      console.log(`📅 Day ${i} (${d.date}): AI: ${d.ai_info}, Terms: ${d.terms}, Quiz: ${d.quiz_score}%`);
       if ((d.ai_info === 0 || d.ai_info === undefined) && (d.terms === 0 || d.terms === undefined) && (d.quiz_score === 0 || d.quiz_score === undefined)) {
-        console.warn(`Day ${i} (${d.date}): 모든 값이 0이거나 undefined! DB 저장/조회/sessionId/날짜 문제 가능성 높음.`);
+        console.warn(`⚠️ Day ${i} (${d.date}): 모든 값이 0이거나 undefined! DB 저장/조회/sessionId/날짜 문제 가능성 높음.`);
       }
     });
+    
+    // 7월 23일자 특별 확인
+    const july23Data = periodStats.period_data.find(d => d.date === '2024-07-23');
+    if (july23Data) {
+      console.log('🎯 7월 23일자 데이터:', july23Data);
+    } else {
+      console.warn('❌ 7월 23일자 데이터를 찾을 수 없습니다!');
+    }
   } else {
-    console.warn('periodStats?.period_data가 배열이 아님:', periodStats?.period_data);
+    console.warn('❌ periodStats?.period_data가 배열이 아님:', periodStats?.period_data);
   }
 
   // 날짜 변경 핸들러 - 상위 컴포넌트에 알림
@@ -331,7 +342,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <BookOpen className="w-5 h-5 text-blue-400" />
-              <h3 className="text-white font-semibold">AI 정보 학습</h3>
+              <h3 className="text-white font-semibold">금융 정보 학습</h3>
             </div>
             <TrendingUp className="w-4 h-4 text-blue-400" />
           </div>
@@ -381,7 +392,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               <span className="text-purple-400 font-bold text-base">60</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-white/70 text-sm">누적 총 용어 수</span>
+              <span className="text-white/70 text-sm">누적 총 학습 수</span>
               <span className="text-white font-semibold">
                 {stats?.total_terms_learned || 0}
               </span>
@@ -442,7 +453,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <span className="text-white/80 font-medium">AI 정보 학습</span>
+                    <span className="text-white/80 font-medium">금융 정보 학습</span>
                   </div>
                   <span className="text-white/60 text-sm">
                     최대: {maxAI}개

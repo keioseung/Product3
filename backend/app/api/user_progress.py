@@ -593,6 +593,16 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
     
     period_data = []
     
+    # 디버깅을 위한 로그 추가
+    print(f"🔍 기간별 통계 조회: session_id={session_id}, start_date={start_date}, end_date={end_date}")
+    print(f"📅 조회할 날짜 목록: {date_list}")
+    
+    # 7월 23일자 특별 확인
+    if '2024-07-23' in date_list:
+        print("🎯 7월 23일이 조회 범위에 포함됨")
+    else:
+        print("❌ 7월 23일이 조회 범위에 포함되지 않음")
+    
     for date in date_list:
         # AI 정보 학습 수
         ai_progress = db.query(UserProgress).filter(
@@ -604,7 +614,9 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
         if ai_progress and ai_progress.learned_info:
             try:
                 ai_count = len(json.loads(ai_progress.learned_info))
-            except json.JSONDecodeError:
+                print(f"📊 {date} AI 정보: {ai_count}개 (learned_info: {ai_progress.learned_info})")
+            except json.JSONDecodeError as e:
+                print(f"❌ {date} AI 정보 JSON 파싱 에러: {e}")
                 pass
         
         # 용어 학습 수 - 날짜별로 그룹핑하여 중복 제거
@@ -625,6 +637,8 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
                     continue
         
         terms_count = len(unique_terms)
+        if terms_count > 0:
+            print(f"📚 {date} 용어 학습: {terms_count}개 (unique_terms: {list(unique_terms)[:5]}...)")
         
         # 퀴즈 점수
         quiz_progress = db.query(UserProgress).filter(
@@ -647,6 +661,7 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
         
         if quiz_total > 0:
             quiz_score = int((quiz_correct / quiz_total) * 100)
+            print(f"🎯 {date} 퀴즈: {quiz_score}% ({quiz_correct}/{quiz_total})")
         
         period_data.append({
             'date': date,
@@ -656,6 +671,8 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
             'quiz_correct': quiz_correct,
             'quiz_total': quiz_total
         })
+    
+    print(f"📈 기간별 통계 결과: {len(period_data)}일, 총 AI 정보: {sum(d['ai_info'] for d in period_data)}, 총 용어: {sum(d['terms'] for d in period_data)}")
     
     return {
         'period_data': period_data,
