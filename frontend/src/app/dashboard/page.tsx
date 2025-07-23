@@ -72,10 +72,10 @@ function WeeklyBarGraph({ weeklyData }: { weeklyData: any[] }) {
 
 export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState(() => {
+    // 한국시간 기준 오늘 날짜 계산
     const today = new Date()
-    // KST 시간대로 조정 (UTC+9)
-    today.setHours(today.getHours() + 9)
-    return today.toISOString().split('T')[0]
+    const koreaTime = new Date(today.getTime() + (9 * 60 * 60 * 1000)) // UTC+9
+    return koreaTime.toISOString().split('T')[0]
   })
   const [sessionId] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -195,17 +195,13 @@ export default function DashboardPage() {
   const maxStreak = Array.isArray(userProgress?.max_streak) ? userProgress.max_streak.length : (userProgress?.max_streak ?? 0)
   const streakProgress = maxStreak > 0 ? (streakDays / maxStreak) * 100 : 0
 
-  // 오늘 날짜 확인 (KST)
+  // 오늘 날짜 확인
   const today = new Date()
-  // KST 시간대로 조정 (UTC+9)
-  today.setHours(today.getHours() + 9)
   const todayDay = today.getDay() // 0: 일요일, 1: 월요일, ..., 6: 토요일
 
   // 주간 학습 데이터 - 실제 사용자 데이터 기반 (월~일 7일 모두)
   const getWeeklyDates = () => {
     const today = new Date();
-    // KST 시간대로 조정 (UTC+9)
-    today.setHours(today.getHours() + 9)
     const dayOfWeek = today.getDay(); // 0: 일, 1: 월, ...
     // 이번주 월요일 구하기
     const monday = new Date(today);
@@ -363,11 +359,7 @@ export default function DashboardPage() {
               style={{ minWidth: 140, maxWidth: 180 }} 
             />
             <span className="px-2 md:px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold text-xs md:text-sm shadow">
-              {selectedDate === (() => {
-          const today = new Date()
-          today.setHours(today.getHours() + 9) // KST 조정
-          return today.toISOString().split('T')[0]
-        })() ? '오늘' : selectedDate}
+              {selectedDate === new Date().toISOString().split('T')[0] ? '오늘' : selectedDate}
             </span>
           </div>
         </div>

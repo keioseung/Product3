@@ -37,31 +37,31 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
   const { data: stats } = useUserStats(sessionId)
 
-  // 기간별 데이터 계산 (KST 기준)
+  // 기간별 데이터 계산
   const getPeriodDates = () => {
+    // 한국시간 기준 오늘 날짜 계산
     const today = new Date()
-    // KST 시간대로 조정 (UTC+9)
-    today.setHours(today.getHours() + 9)
-    const startDate = new Date(today)
+    const koreaTime = new Date(today.getTime() + (9 * 60 * 60 * 1000)) // UTC+9
+    const startDate = new Date(koreaTime.getTime())
     
     switch (periodType) {
       case 'week':
-        startDate.setDate(today.getDate() - 6)
+        startDate.setDate(koreaTime.getDate() - 6)
         break
       case 'month':
-        startDate.setDate(today.getDate() - 29)
+        startDate.setDate(koreaTime.getDate() - 29)
         break
       case 'custom':
         if (customStartDate && customEndDate) {
           return { start: customStartDate, end: customEndDate }
         }
-        startDate.setDate(today.getDate() - 6)
+        startDate.setDate(koreaTime.getDate() - 6)
         break
     }
     
     return {
       start: startDate.toISOString().split('T')[0],
-      end: today.toISOString().split('T')[0]
+      end: koreaTime.toISOString().split('T')[0]
     }
   }
 
@@ -111,13 +111,13 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     console.log('진행률 탭 - 기간 변경:', type)
     setPeriodType(type)
     if (type === 'custom') {
+      // 한국시간 기준 날짜 계산
       const today = new Date()
-      // KST 시간대로 조정 (UTC+9)
-      today.setHours(today.getHours() + 9)
-      const weekAgo = new Date(today)
-      weekAgo.setDate(today.getDate() - 6)
+      const koreaTime = new Date(today.getTime() + (9 * 60 * 60 * 1000)) // UTC+9
+      const weekAgo = new Date(koreaTime.getTime())
+      weekAgo.setDate(koreaTime.getDate() - 6)
       setCustomStartDate(weekAgo.toISOString().split('T')[0])
-      setCustomEndDate(today.toISOString().split('T')[0])
+      setCustomEndDate(koreaTime.toISOString().split('T')[0])
     }
   }
 
@@ -173,9 +173,10 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
               id="progress-date"
               type="date"
               value={selectedDate || (() => {
+                // 한국시간 기준 오늘 날짜 계산
                 const today = new Date()
-                today.setHours(today.getHours() + 9) // KST 조정
-                return today.toISOString().split('T')[0]
+                const koreaTime = new Date(today.getTime() + (9 * 60 * 60 * 1000)) // UTC+9
+                return koreaTime.toISOString().split('T')[0]
               })()}
               onChange={(e) => {
                 handleDateChange(e.target.value)

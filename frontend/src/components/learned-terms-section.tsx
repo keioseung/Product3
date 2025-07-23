@@ -190,9 +190,7 @@ function LearnedTermsSection({ sessionId }: LearnedTermsSectionProps) {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-            const today = new Date()
-        today.setHours(today.getHours() + 9) // KST 조정
-        link.download = `학습용어_${today.toISOString().split('T')[0]}.csv`
+    link.download = `학습용어_${new Date().toISOString().split('T')[0]}.csv`
     link.click()
   }
 

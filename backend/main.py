@@ -61,13 +61,13 @@ async def options_handler(path: str):
 @app.middleware("http")
 async def log_requests(request, call_next):
     """모든 요청을 로깅하는 미들웨어"""
-    start_time = datetime.now(pytz.timezone('Asia/Seoul'))
+    start_time = datetime.now()
     print(f"📥 요청: {request.method} {request.url}")
     print(f"🔐 헤더 Authorization: {'있음' if request.headers.get('authorization') else '없음'}")
     
     response = await call_next(request)
     
-    process_time = (datetime.now(pytz.timezone('Asia/Seoul')) - start_time).total_seconds()
+    process_time = (datetime.now() - start_time).total_seconds()
     print(f"📤 응답: {response.status_code} ({process_time:.3f}s)")
     
     return response

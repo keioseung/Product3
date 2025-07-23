@@ -28,7 +28,7 @@ def run_database_init():
             print("⚠️ 데이터베이스 초기화 실패 (서버는 계속 시작)")
             print(f"오류: {result.stderr}")
             return False
-
+            
 def run_database_migration():
     """데이터베이스 마이그레이션 실행"""
     try:
