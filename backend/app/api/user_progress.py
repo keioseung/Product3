@@ -229,9 +229,12 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         UserProgress.date == '__stats__'
     ).first()
     
-    # 오늘 날짜
+    # 오늘 날짜 (KST)
     from datetime import datetime
-    today = datetime.now().strftime('%Y-%m-%d')
+    import pytz
+    
+    kst = pytz.timezone('Asia/Seoul')
+    today = datetime.now(kst).strftime('%Y-%m-%d')
     
     # 오늘 학습 데이터 가져오기
     today_ai_info = 0
@@ -404,9 +407,12 @@ def update_quiz_score(session_id: str, score_data: dict, request: Request, db: S
     # 점수 계산 (백분율)
     quiz_score = int((score / total_questions) * 100) if total_questions > 0 else 0
     
-    # 오늘 날짜
+    # 오늘 날짜 (KST)
     from datetime import datetime
-    today = datetime.now().strftime('%Y-%m-%d')
+    import pytz
+    
+    kst = pytz.timezone('Asia/Seoul')
+    today = datetime.now(kst).strftime('%Y-%m-%d')
     
     # 오늘 퀴즈 세션 번호 찾기
     existing_quiz_sessions = db.query(UserProgress).filter(
@@ -685,8 +691,11 @@ def get_period_stats(session_id: str, start_date: str, end_date: str, db: Sessio
 def get_user_stats(session_id: str, db: Session = Depends(get_db)):
     """사용자 통계 정보를 조회합니다 (대시보드용)"""
     from datetime import datetime, timedelta
+    import pytz
     
-    today = datetime.now().strftime('%Y-%m-%d')
+    # KST 시간대 설정
+    kst = pytz.timezone('Asia/Seoul')
+    today = datetime.now(kst).strftime('%Y-%m-%d')
     
     # 오늘 AI 정보 학습 수
     today_ai_progress = db.query(UserProgress).filter(

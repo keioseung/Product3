@@ -36,7 +36,7 @@ async def create_backup(
         
         backup_data = {
             "backup_info": {
-                "created_at": datetime.now().isoformat(),
+                "created_at": datetime.now(pytz.timezone('Asia/Seoul')).isoformat(),
                 "created_by": current_user.username,
                 "description": description or "Manual backup",
                 "tables_included": include_tables,
@@ -77,7 +77,7 @@ async def create_backup(
                 backup_data["data"][table_name] = table_data
         
         # 백업 파일명 생성
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(pytz.timezone('Asia/Seoul')).strftime("%Y%m%d_%H%M%S")
         filename = f"ai_mastery_backup_{timestamp}.json"
         
         # JSON 문자열 생성
@@ -567,7 +567,7 @@ async def get_admin_stats(
         total_users = db.query(User).count()
         
         # 2. 활성 사용자 수 (최근 7일간 활동)
-        seven_days_ago = datetime.now() - timedelta(days=7)
+        seven_days_ago = datetime.now(pytz.timezone('Asia/Seoul')) - timedelta(days=7)
         
         # 세션 ID 기반으로 활성 사용자 계산
         active_sessions_subquery = db.query(ActivityLog.session_id).filter(
@@ -614,7 +614,7 @@ async def get_admin_stats(
         day_names = ['월', '화', '수', '목', '금', '토', '일']
         
         for i in range(7):
-            target_date = datetime.now() - timedelta(days=6-i)
+            target_date = datetime.now(pytz.timezone('Asia/Seoul')) - timedelta(days=6-i)
             
             # 해당 날짜의 활동 사용자 수 (세션 ID 기준)
             daily_sessions = db.query(ActivityLog.session_id).filter(
@@ -642,7 +642,7 @@ async def get_admin_stats(
         
         for log in recent_logs:
             # 시간차 계산
-            now = datetime.now()
+            now = datetime.now(pytz.timezone('Asia/Seoul'))
             log_time = log.created_at.replace(tzinfo=None) if log.created_at.tzinfo else log.created_at
             time_diff = now - log_time
             

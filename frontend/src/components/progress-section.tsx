@@ -37,10 +37,12 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
 
   const { data: stats } = useUserStats(sessionId)
 
-  // 기간별 데이터 계산
+  // 기간별 데이터 계산 (KST 기준)
   const getPeriodDates = () => {
     const today = new Date()
-    const startDate = new Date()
+    // KST 시간대로 조정 (UTC+9)
+    today.setHours(today.getHours() + 9)
+    const startDate = new Date(today)
     
     switch (periodType) {
       case 'week':
@@ -110,7 +112,9 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
     setPeriodType(type)
     if (type === 'custom') {
       const today = new Date()
-      const weekAgo = new Date()
+      // KST 시간대로 조정 (UTC+9)
+      today.setHours(today.getHours() + 9)
+      const weekAgo = new Date(today)
       weekAgo.setDate(today.getDate() - 6)
       setCustomStartDate(weekAgo.toISOString().split('T')[0])
       setCustomEndDate(today.toISOString().split('T')[0])
@@ -168,7 +172,11 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             <input
               id="progress-date"
               type="date"
-              value={selectedDate || new Date().toISOString().split('T')[0]}
+              value={selectedDate || (() => {
+                const today = new Date()
+                today.setHours(today.getHours() + 9) // KST 조정
+                return today.toISOString().split('T')[0]
+              })()}
               onChange={(e) => {
                 handleDateChange(e.target.value)
               }}
