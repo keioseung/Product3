@@ -126,7 +126,9 @@ export default function LogsManagementPage() {
     
     const link = document.createElement('a')
     link.href = URL.createObjectURL(dataBlob)
-    link.download = `logs_export_${new Date().toISOString().split('T')[0]}.json`
+            const today = new Date()
+        today.setHours(today.getHours() + 9) // KST 조정
+        link.download = `logs_export_${today.toISOString().split('T')[0]}.json`
     link.click()
   }
 

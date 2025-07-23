@@ -78,13 +78,17 @@ export default function AdminPromptPage() {
     e.preventDefault()
     if (!baseTitle || !baseContent) return
     if (baseEditId) {
-      setBaseContents(baseContents.map(b => b.id === baseEditId ? { ...b, title: baseTitle, content: baseContent, date: new Date().toISOString().slice(0,10) } : b))
+              const today = new Date()
+        today.setHours(today.getHours() + 9) // KST 조정
+        setBaseContents(baseContents.map(b => b.id === baseEditId ? { ...b, title: baseTitle, content: baseContent, date: today.toISOString().slice(0,10) } : b))
       setBaseEditId(null)
     } else {
-      setBaseContents([
-        ...baseContents,
-        { id: Date.now().toString(), title: baseTitle, content: baseContent, date: new Date().toISOString().slice(0,10) }
-      ])
+              const today = new Date()
+        today.setHours(today.getHours() + 9) // KST 조정
+        setBaseContents([
+          ...baseContents,
+          { id: Date.now().toString(), title: baseTitle, content: baseContent, date: today.toISOString().slice(0,10) }
+        ])
     }
     setBaseTitle('')
     setBaseContent('')

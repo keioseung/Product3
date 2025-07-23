@@ -21,7 +21,7 @@ def add_prompt(prompt_data: PromptCreate, db: Session = Depends(get_db)):
         title=prompt_data.title,
         content=prompt_data.content,
         category=prompt_data.category,
-        created_at=datetime.now()
+        created_at=datetime.now(pytz.timezone('Asia/Seoul'))
     )
     db.add(db_prompt)
     db.commit()

@@ -804,7 +804,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
     
     # 연속 학습일 계산 (간단한 구현)
     streak_days = 0
-    current_date = datetime.now()
+    current_date = datetime.now(pytz.timezone('Asia/Seoul'))
     for i in range(30):  # 최근 30일 확인
         check_date = (current_date - timedelta(days=i)).strftime('%Y-%m-%d')
         day_progress = db.query(UserProgress).filter(
