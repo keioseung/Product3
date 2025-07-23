@@ -266,24 +266,25 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
     
     print(f"🔍 오늘 용어 학습 조회: {today} - {len(today_terms_progress)}개 기록")
     
-    # 오늘 학습한 고유한 용어들을 추적
-    today_learned_terms = set()
+    # 오늘 학습한 고유한 용어들을 추적 (info_index 기준으로 중복 제거)
+    today_learned_info_indices = set()
     
     for term_progress in today_terms_progress:
         if term_progress.learned_info:
             try:
-                learned_data = json.loads(term_progress.learned_info)
-                # 각 용어를 set에 추가 (중복 제거)
-                for term in learned_data:
-                    today_learned_terms.add(term)
-                print(f"📚 오늘 용어 학습: {term_progress.date} - {len(learned_data)}개")
-            except json.JSONDecodeError:
-                print(f"❌ 오늘 용어 JSON 파싱 에러: {term_progress.date}")
+                # date에서 info_index 추출 (예: __terms__2024-07-23_0 -> 0)
+                date_parts = term_progress.date.split('_')
+                if len(date_parts) >= 2:
+                    info_index = int(date_parts[-1])
+                    today_learned_info_indices.add(info_index)
+                print(f"📚 오늘 용어 학습: {term_progress.date} - info_index: {date_parts[-1] if len(date_parts) >= 2 else 'N/A'}")
+            except (json.JSONDecodeError, ValueError, IndexError) as e:
+                print(f"❌ 오늘 용어 파싱 에러: {term_progress.date} - {e}")
                 continue
     
-    # 고유한 용어 수를 today_terms로 설정
-    today_terms = len(today_learned_terms)
-    print(f"📊 오늘 학습한 고유 용어 수: {today_terms}개")
+    # 고유한 info_index 수를 today_terms로 설정 (각 info_index는 하나의 용어 세트를 의미)
+    today_terms = len(today_learned_info_indices)
+    print(f"📊 오늘 학습한 고유 용어 세트 수: {today_terms}개")
     
     # 오늘 퀴즈 점수 누적 계산
     today_quiz_correct = 0
@@ -354,24 +355,25 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
     
     print(f"🔍 전체 용어 학습 조회: {len(all_terms_progress)}개 기록")
     
-    # 전체 학습한 고유한 용어들을 추적
-    all_learned_terms = set()
+    # 전체 학습한 고유한 용어들을 추적 (info_index 기준으로 중복 제거)
+    all_learned_info_indices = set()
     
     for p in all_terms_progress:
         if p.learned_info:
             try:
-                learned_data = json.loads(p.learned_info)
-                # 각 용어를 set에 추가 (중복 제거)
-                for term in learned_data:
-                    all_learned_terms.add(term)
-                print(f"📚 전체 용어 학습: {p.date} - {len(learned_data)}개")
-            except json.JSONDecodeError:
-                print(f"❌ 전체 용어 JSON 파싱 에러: {p.date}")
+                # date에서 info_index 추출 (예: __terms__2024-07-23_0 -> 0)
+                date_parts = p.date.split('_')
+                if len(date_parts) >= 2:
+                    info_index = int(date_parts[-1])
+                    all_learned_info_indices.add(info_index)
+                print(f"📚 전체 용어 학습: {p.date} - info_index: {date_parts[-1] if len(date_parts) >= 2 else 'N/A'}")
+            except (json.JSONDecodeError, ValueError, IndexError) as e:
+                print(f"❌ 전체 용어 파싱 에러: {p.date} - {e}")
                 continue
     
-    # 고유한 용어 수를 total_terms_available로 설정
-    total_terms_available = len(all_learned_terms)
-    print(f"📊 전체 학습한 고유 용어 수: {total_terms_available}개")
+    # 고유한 info_index 수를 total_terms_available로 설정 (각 info_index는 하나의 용어 세트를 의미)
+    total_terms_available = len(all_learned_info_indices)
+    print(f"📊 전체 학습한 고유 용어 세트 수: {total_terms_available}개")
     
     if progress and progress.stats:
         stats = json.loads(progress.stats)
@@ -381,9 +383,9 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
             'today_quiz_score': today_quiz_score,
             'today_quiz_correct': today_quiz_correct,
             'today_quiz_total': today_quiz_total,
-            'total_ai_info_available': total_ai_info_available,
-            'total_terms_available': total_terms_available,
-            'total_terms_learned': total_terms_available,  # 누적 총 용어 학습 수 추가
+            'total_ai_info_available': 3,  # 총 AI 정보 수는 3개로 고정
+            'total_terms_available': 60,  # 총 용어 수는 60개로 고정
+            'total_terms_learned': total_terms_available,  # 누적 총 용어 학습 수 (오늘까지 학습한 용어 총 개수)
             'cumulative_quiz_score': cumulative_quiz_score,
             'total_quiz_correct': total_quiz_correct,
             'total_quiz_questions': total_quiz_questions
@@ -391,7 +393,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         return stats
     
     return {
-        'total_learned': total_ai_info_available,  # 누적 총 학습 수를 total_ai_info_available로 설정
+        'total_learned': total_ai_info_available,  # 누적 총 학습 수 (오늘까지 학습한 AI 정보 총 개수)
         'streak_days': 0,
         'last_learned_date': None,
         'quiz_score': 0,
@@ -401,9 +403,9 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         'today_quiz_score': today_quiz_score,
         'today_quiz_correct': today_quiz_correct,
         'today_quiz_total': today_quiz_total,
-        'total_ai_info_available': total_ai_info_available,
-        'total_terms_available': total_terms_available,
-        'total_terms_learned': total_terms_available,  # 누적 총 용어 학습 수 추가
+        'total_ai_info_available': 3,  # 총 AI 정보 수는 3개로 고정
+        'total_terms_available': 60,  # 총 용어 수는 60개로 고정
+        'total_terms_learned': total_terms_available,  # 누적 총 용어 학습 수 (오늘까지 학습한 용어 총 개수)
         'cumulative_quiz_score': cumulative_quiz_score,
         'total_quiz_correct': total_quiz_correct,
         'total_quiz_questions': total_quiz_questions
