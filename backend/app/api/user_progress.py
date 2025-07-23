@@ -235,193 +235,7 @@ def update_user_statistics(session_id: str, db: Session):
     
     db.commit()
 
-@router.get("/stats/{session_id}")
-def get_user_stats(session_id: str, db: Session = Depends(get_db)):
-    progress = db.query(UserProgress).filter(
-        UserProgress.session_id == session_id, 
-        UserProgress.date == '__stats__'
-    ).first()
-    
-    # 오늘 날짜
-    from datetime import datetime
-    today = datetime.now().strftime('%Y-%m-%d')
-    
-    # 오늘 학습 데이터 가져오기
-    today_ai_info = 0
-    today_terms = 0
-    today_quiz_score = 0
-    today_quiz_correct = 0
-    today_quiz_total = 0
-    
-    # 오늘 AI 정보 학습 수
-    today_progress = db.query(UserProgress).filter(
-        UserProgress.session_id == session_id,
-        UserProgress.date == today
-    ).first()
-    
-    if today_progress and today_progress.learned_info:
-        try:
-            today_ai_info = len(json.loads(today_progress.learned_info))
-        except json.JSONDecodeError:
-            today_ai_info = 0
-    
-    # 오늘 용어 학습 수 (각 용어별로 개별 저장되므로 고유한 용어 수 계산)
-    today_terms_progress = db.query(UserProgress).filter(
-        UserProgress.session_id == session_id,
-        UserProgress.date.like(f'__terms__{today}%')
-    ).all()
-    
-    print(f"🔍 오늘 용어 학습 조회: {today} - {len(today_terms_progress)}개 기록")
-    
-    # 오늘 학습한 고유한 용어들을 추적 (info_index 기준으로 중복 제거)
-    today_learned_info_indices = set()
-    
-    for term_progress in today_terms_progress:
-        if term_progress.learned_info:
-            try:
-                # date에서 info_index 추출 (예: __terms__2024-07-23_0 -> 0)
-                date_parts = term_progress.date.split('_')
-                if len(date_parts) >= 2:
-                    info_index = int(date_parts[-1])
-                    today_learned_info_indices.add(info_index)
-                print(f"📚 오늘 용어 학습: {term_progress.date} - info_index: {date_parts[-1] if len(date_parts) >= 2 else 'N/A'}")
-            except (json.JSONDecodeError, ValueError, IndexError) as e:
-                print(f"❌ 오늘 용어 파싱 에러: {term_progress.date} - {e}")
-                continue
-    
-    # 고유한 info_index 수를 today_terms로 설정 (각 info_index는 하나의 용어 세트를 의미)
-    today_terms = len(today_learned_info_indices)
-    print(f"📊 오늘 학습한 고유 용어 세트 수: {today_terms}개")
-    
-    # 오늘 퀴즈 점수 누적 계산
-    today_quiz_correct = 0
-    today_quiz_total = 0
-    today_quiz_score = 0
-    
-    # 오늘 날짜의 모든 퀴즈 기록 가져오기
-    today_quiz_progress_list = db.query(UserProgress).filter(
-        UserProgress.session_id == session_id,
-        UserProgress.date.like(f'__quiz__{today}%')
-    ).all()
-    
-    for quiz_progress in today_quiz_progress_list:
-        if quiz_progress.stats:
-            try:
-                quiz_data = json.loads(quiz_progress.stats)
-                today_quiz_correct += quiz_data.get('correct', 0)
-                today_quiz_total += quiz_data.get('total', 0)
-            except json.JSONDecodeError:
-                continue
-    
-    # 오늘 누적 퀴즈 점수 계산
-    today_quiz_score = int((today_quiz_correct / today_quiz_total) * 100) if today_quiz_total > 0 else 0
-    
-    # 전체 누적 퀴즈 통계 계산
-    total_quiz_correct = 0
-    total_quiz_questions = 0
-    
-    # 모든 퀴즈 기록 가져오기
-    all_quiz_progress = db.query(UserProgress).filter(
-        UserProgress.session_id == session_id,
-        UserProgress.date.like('__quiz__%')
-    ).all()
-    
-    for quiz_progress in all_quiz_progress:
-        if quiz_progress.stats:
-            try:
-                quiz_data = json.loads(quiz_progress.stats)
-                total_quiz_correct += quiz_data.get('correct', 0)
-                total_quiz_questions += quiz_data.get('total', 0)
-            except json.JSONDecodeError:
-                continue
-    
-    # 전체 누적 퀴즈 점수 계산
-    cumulative_quiz_score = int((total_quiz_correct / total_quiz_questions) * 100) if total_quiz_questions > 0 else 0
-    
-    # 총 AI 정보 수 계산 (오늘까지 학습한 AI 정보의 총 개수)
-    total_ai_info_learned = 0
-    all_ai_progress = db.query(UserProgress).filter(
-        UserProgress.session_id == session_id,
-        ~UserProgress.date.like('__%')
-    ).all()
-    
-    for p in all_ai_progress:
-        if p.learned_info:
-            try:
-                learned_data = json.loads(p.learned_info)
-                total_ai_info_learned += len(learned_data)
-                print(f"📊 AI 정보 학습 기록: {p.date} - {len(learned_data)}개 학습됨")
-            except json.JSONDecodeError:
-                print(f"❌ AI 정보 JSON 파싱 에러: {p.date}")
-                continue
-    
-    print(f"📈 총 AI 정보 학습 수: {total_ai_info_learned}개")
-    
-    # 총 용어 수 계산 (모든 날짜의 고유한 용어 수)
-    total_terms_available = 0
-    all_terms_progress = db.query(UserProgress).filter(
-        UserProgress.session_id == session_id,
-        UserProgress.date.like('__terms__%')
-    ).all()
-    
-    print(f"🔍 전체 용어 학습 조회: {len(all_terms_progress)}개 기록")
-    
-    # 전체 학습한 고유한 용어들을 추적 (info_index 기준으로 중복 제거)
-    all_learned_info_indices = set()
-    
-    for p in all_terms_progress:
-        if p.learned_info:
-            try:
-                # date에서 info_index 추출 (예: __terms__2024-07-23_0 -> 0)
-                date_parts = p.date.split('_')
-                if len(date_parts) >= 2:
-                    info_index = int(date_parts[-1])
-                    all_learned_info_indices.add(info_index)
-                print(f"📚 전체 용어 학습: {p.date} - info_index: {date_parts[-1] if len(date_parts) >= 2 else 'N/A'}")
-            except (json.JSONDecodeError, ValueError, IndexError) as e:
-                print(f"❌ 전체 용어 파싱 에러: {p.date} - {e}")
-                continue
-    
-    # 고유한 info_index 수를 total_terms_available로 설정 (각 info_index는 하나의 용어 세트를 의미)
-    total_terms_available = len(all_learned_info_indices)
-    print(f"📊 전체 학습한 고유 용어 세트 수: {total_terms_available}개")
-    
-    if progress and progress.stats:
-        stats = json.loads(progress.stats)
-        stats.update({
-            'today_ai_info': today_ai_info,
-            'today_terms': today_terms,
-            'today_quiz_score': today_quiz_score,
-            'today_quiz_correct': today_quiz_correct,
-            'today_quiz_total': today_quiz_total,
-            'total_learned': total_ai_info_learned,  # 누적 총 학습 수 추가
-            'total_ai_info_available': 3,  # 총 AI 정보 수는 3개로 고정
-            'total_terms_available': 60,  # 총 용어 수는 60개로 고정
-            'total_terms_learned': total_terms_available,  # 누적 총 용어 학습 수 (오늘까지 학습한 용어 총 개수)
-            'cumulative_quiz_score': cumulative_quiz_score,
-            'total_quiz_correct': total_quiz_correct,
-            'total_quiz_questions': total_quiz_questions
-        })
-        return stats
-    
-    return {
-        'total_learned': total_ai_info_learned,  # 누적 총 학습 수 (오늘까지 학습한 AI 정보 총 개수)
-        'streak_days': 0,
-        'last_learned_date': None,
-        'quiz_score': 0,
-        'achievements': [],
-        'today_ai_info': today_ai_info,
-        'today_terms': today_terms,
-        'today_quiz_score': today_quiz_score,
-        'today_quiz_correct': today_quiz_correct,
-        'today_quiz_total': today_quiz_total,
-        'total_ai_info_available': 3,  # 총 AI 정보 수는 3개로 고정
-        'total_terms_available': 60,  # 총 용어 수는 60개로 고정
-        'total_terms_learned': total_terms_available,  # 누적 총 용어 학습 수 (오늘까지 학습한 용어 총 개수)
-        'cumulative_quiz_score': cumulative_quiz_score,
-        'total_quiz_correct': total_quiz_correct,
-        'total_quiz_questions': total_quiz_questions
-    }
+
 
 @router.post("/stats/{session_id}")
 def update_user_stats(session_id: str, stats: Dict[str, Any], db: Session = Depends(get_db)):
@@ -750,22 +564,29 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         except json.JSONDecodeError:
             pass
     
-    # 오늘 용어 학습 수
+    # 오늘 용어 학습 수 (info_index 기준으로 중복 제거)
     today_terms_progress = db.query(UserProgress).filter(
         UserProgress.session_id == session_id,
         UserProgress.date.like(f'__terms__{today}%')
     ).all()
     
     today_terms = 0
-    unique_terms = set()
+    today_learned_info_indices = set()
     for term_progress in today_terms_progress:
         if term_progress.learned_info:
             try:
-                terms = json.loads(term_progress.learned_info)
-                unique_terms.update(terms)
-            except json.JSONDecodeError:
+                # date에서 info_index 추출 (예: __terms__2024-07-23_0 -> 0)
+                date_parts = term_progress.date.split('_')
+                if len(date_parts) >= 2:
+                    info_index = int(date_parts[-1])
+                    today_learned_info_indices.add(info_index)
+                print(f"📚 오늘 용어 학습: {term_progress.date} - info_index: {date_parts[-1] if len(date_parts) >= 2 else 'N/A'}")
+            except (json.JSONDecodeError, ValueError, IndexError) as e:
+                print(f"❌ 오늘 용어 파싱 에러: {term_progress.date} - {e}")
                 continue
-    today_terms = len(unique_terms)
+    
+    today_terms = len(today_learned_info_indices)
+    print(f"📊 오늘 학습한 고유 용어 세트 수: {today_terms}개")
     
     # 오늘 퀴즈 점수
     today_quiz_progress = db.query(UserProgress).filter(
@@ -789,7 +610,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
     if today_quiz_total > 0:
         today_quiz_score = int((today_quiz_correct / today_quiz_total) * 100)
     
-    # 총 학습량 계산
+    # 총 AI 정보 학습량 계산 (오늘까지 학습한 AI 정보의 총 개수)
     all_ai_progress = db.query(UserProgress).filter(
         UserProgress.session_id == session_id,
         ~UserProgress.date.like('__%')
@@ -800,25 +621,36 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         if progress.learned_info:
             try:
                 total_learned += len(json.loads(progress.learned_info))
+                print(f"📊 AI 정보 학습 기록: {progress.date} - {len(json.loads(progress.learned_info))}개 학습됨")
             except json.JSONDecodeError:
+                print(f"❌ AI 정보 JSON 파싱 에러: {progress.date}")
                 continue
     
-    # 총 용어 학습량
+    print(f"📈 총 AI 정보 학습 수: {total_learned}개")
+    
+    # 총 용어 학습량 (info_index 기준으로 중복 제거)
     all_terms_progress = db.query(UserProgress).filter(
         UserProgress.session_id == session_id,
         UserProgress.date.like('__terms__%')
     ).all()
     
     total_terms_learned = 0
-    all_unique_terms = set()
+    all_learned_info_indices = set()
     for term_progress in all_terms_progress:
         if term_progress.learned_info:
             try:
-                terms = json.loads(term_progress.learned_info)
-                all_unique_terms.update(terms)
-            except json.JSONDecodeError:
+                # date에서 info_index 추출 (예: __terms__2024-07-23_0 -> 0)
+                date_parts = term_progress.date.split('_')
+                if len(date_parts) >= 2:
+                    info_index = int(date_parts[-1])
+                    all_learned_info_indices.add(info_index)
+                print(f"📚 전체 용어 학습: {term_progress.date} - info_index: {date_parts[-1] if len(date_parts) >= 2 else 'N/A'}")
+            except (json.JSONDecodeError, ValueError, IndexError) as e:
+                print(f"❌ 전체 용어 파싱 에러: {term_progress.date} - {e}")
                 continue
-    total_terms_learned = len(all_unique_terms)
+    
+    total_terms_learned = len(all_learned_info_indices)
+    print(f"📈 총 용어 학습 수: {total_terms_learned}개")
     
     # 누적 퀴즈 점수
     all_quiz_progress = db.query(UserProgress).filter(
@@ -872,6 +704,8 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         "today_quiz_total": today_quiz_total,
         "total_learned": total_learned,
         "total_terms_learned": total_terms_learned,
+        "total_terms_available": 60,  # 총 용어 수는 60개로 고정
+        "total_ai_info_available": 3,  # 총 AI 정보 수는 3개로 고정
         "cumulative_quiz_score": cumulative_quiz_score,
         "cumulative_quiz_correct": cumulative_quiz_correct,
         "cumulative_quiz_total": cumulative_quiz_total,
