@@ -389,9 +389,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">총 용어 수</span>
-              <span className="text-purple-400 font-bold text-base">
-                {stats?.total_terms_available || 0}
-              </span>
+              <span className="text-purple-400 font-bold text-base">60</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/70 text-sm">누적 총 학습 수</span>

@@ -258,7 +258,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         except json.JSONDecodeError:
             today_ai_info = 0
     
-    # 오늘 용어 학습 수
+    # 오늘 용어 학습 수 (각 용어별로 개별 저장되므로 고유한 용어 수 계산)
     today_terms_progress = db.query(UserProgress).filter(
         UserProgress.session_id == session_id,
         UserProgress.date.like(f'__terms__{today}%')
@@ -266,15 +266,24 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
     
     print(f"🔍 오늘 용어 학습 조회: {today} - {len(today_terms_progress)}개 기록")
     
+    # 오늘 학습한 고유한 용어들을 추적
+    today_learned_terms = set()
+    
     for term_progress in today_terms_progress:
         if term_progress.learned_info:
             try:
                 learned_data = json.loads(term_progress.learned_info)
-                today_terms += len(learned_data)
+                # 각 용어를 set에 추가 (중복 제거)
+                for term in learned_data:
+                    today_learned_terms.add(term)
                 print(f"📚 오늘 용어 학습: {term_progress.date} - {len(learned_data)}개")
             except json.JSONDecodeError:
                 print(f"❌ 오늘 용어 JSON 파싱 에러: {term_progress.date}")
                 continue
+    
+    # 고유한 용어 수를 today_terms로 설정
+    today_terms = len(today_learned_terms)
+    print(f"📊 오늘 학습한 고유 용어 수: {today_terms}개")
     
     # 오늘 퀴즈 점수 누적 계산
     today_quiz_correct = 0
@@ -336,7 +345,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
             except json.JSONDecodeError:
                 continue
     
-    # 총 용어 수 계산 (모든 날짜의 용어 수)
+    # 총 용어 수 계산 (모든 날짜의 고유한 용어 수)
     total_terms_available = 0
     all_terms_progress = db.query(UserProgress).filter(
         UserProgress.session_id == session_id,
@@ -345,15 +354,24 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
     
     print(f"🔍 전체 용어 학습 조회: {len(all_terms_progress)}개 기록")
     
+    # 전체 학습한 고유한 용어들을 추적
+    all_learned_terms = set()
+    
     for p in all_terms_progress:
         if p.learned_info:
             try:
                 learned_data = json.loads(p.learned_info)
-                total_terms_available += len(learned_data)
-                print(f"📚 전체 용어 학습: {p.date} - {len(learned_data)}개 (누적: {total_terms_available})")
+                # 각 용어를 set에 추가 (중복 제거)
+                for term in learned_data:
+                    all_learned_terms.add(term)
+                print(f"📚 전체 용어 학습: {p.date} - {len(learned_data)}개")
             except json.JSONDecodeError:
                 print(f"❌ 전체 용어 JSON 파싱 에러: {p.date}")
                 continue
+    
+    # 고유한 용어 수를 total_terms_available로 설정
+    total_terms_available = len(all_learned_terms)
+    print(f"📊 전체 학습한 고유 용어 수: {total_terms_available}개")
     
     if progress and progress.stats:
         stats = json.loads(progress.stats)
