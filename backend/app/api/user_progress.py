@@ -148,7 +148,9 @@ def update_user_statistics(session_id: str, db: Session):
                 learned_data = json.loads(p.learned_info)
                 total_learned += len(learned_data)
                 learned_dates.append(p.date)
+                print(f"📊 AI 정보 학습 기록: {p.date} - {len(learned_data)}개 학습됨")
             except json.JSONDecodeError:
+                print(f"❌ AI 정보 JSON 파싱 에러: {p.date}")
                 continue
     
     # 용어 학습 통계
@@ -157,7 +159,9 @@ def update_user_statistics(session_id: str, db: Session):
             try:
                 learned_data = json.loads(p.learned_info)
                 total_terms_learned += len(learned_data)
+                print(f"📚 용어 학습 기록: {p.date} - {len(learned_data)}개 학습됨")
             except json.JSONDecodeError:
+                print(f"❌ 용어 JSON 파싱 에러: {p.date}")
                 continue
     
     # 연속 학습일 계산
@@ -207,6 +211,8 @@ def update_user_statistics(session_id: str, db: Session):
         'quiz_score': current_stats.get('quiz_score', 0),
         'achievements': current_stats.get('achievements', [])
     }
+    
+    print(f"📈 통계 업데이트: AI 정보 총 {total_learned}개, 용어 총 {total_terms_learned}개")
     
     # 통계 저장
     if stats_progress:
@@ -357,7 +363,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         return stats
     
     return {
-        'total_learned': 0,
+        'total_learned': total_ai_info_available,  # 누적 총 학습 수를 total_ai_info_available로 설정
         'streak_days': 0,
         'last_learned_date': None,
         'quiz_score': 0,
