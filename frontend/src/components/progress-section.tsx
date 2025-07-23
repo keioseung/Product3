@@ -556,7 +556,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                               {data.terms > 0 && (
                                 <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
                                   percent === 100 
-                                    ? 'bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-500 text-white shadow-2xl shadow-purple-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-purple-300' 
+                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
                                     : 'bg-gradient-to-r from-purple-400 to-pink-300 text-white shadow-lg shadow-purple-500/30 px-1.5 py-0.5 rounded-md'
                                 }`}>
                                   {percent}%
@@ -619,7 +619,7 @@ function ProgressSection({ sessionId, selectedDate, onDateChange }: ProgressSect
                               {data.quiz_score > 0 && (
                                 <div className={`absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold whitespace-nowrap z-20 transition-all duration-300 min-w-[40px] text-center ${
                                   percent === 100 
-                                    ? 'bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500 text-white shadow-2xl shadow-green-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-green-300' 
+                                    ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-2xl shadow-orange-500/50 animate-pulse px-2 py-1 rounded-full border-2 border-yellow-300' 
                                     : 'bg-gradient-to-r from-green-400 to-emerald-300 text-white shadow-lg shadow-green-500/30 px-1.5 py-0.5 rounded-md'
                                 }`}>
                                   {percent}%
