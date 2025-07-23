@@ -141,7 +141,7 @@ def update_user_statistics(session_id: str, db: Session):
     total_terms_learned = 0
     learned_dates = []
     
-    # AI 정보 학습 통계
+    # AI 정보 학습 통계 (오늘까지 학습한 AI 정보의 총 개수)
     for p in ai_progress:
         if p.learned_info:
             try:
@@ -153,16 +153,23 @@ def update_user_statistics(session_id: str, db: Session):
                 print(f"❌ AI 정보 JSON 파싱 에러: {p.date}")
                 continue
     
-    # 용어 학습 통계
+    # 용어 학습 통계 (info_index 기준으로 중복 제거)
+    learned_info_indices = set()
     for p in terms_progress:
         if p.learned_info:
             try:
-                learned_data = json.loads(p.learned_info)
-                total_terms_learned += len(learned_data)
-                print(f"📚 용어 학습 기록: {p.date} - {len(learned_data)}개 학습됨")
-            except json.JSONDecodeError:
-                print(f"❌ 용어 JSON 파싱 에러: {p.date}")
+                # date에서 info_index 추출 (예: __terms__2024-07-23_0 -> 0)
+                date_parts = p.date.split('_')
+                if len(date_parts) >= 2:
+                    info_index = int(date_parts[-1])
+                    learned_info_indices.add(info_index)
+                print(f"📚 용어 학습 기록: {p.date} - info_index: {date_parts[-1] if len(date_parts) >= 2 else 'N/A'}")
+            except (json.JSONDecodeError, ValueError, IndexError) as e:
+                print(f"❌ 용어 파싱 에러: {p.date} - {e}")
                 continue
+    
+    total_terms_learned = len(learned_info_indices)
+    print(f"📈 용어 학습 통계: 총 {total_terms_learned}개 용어 세트 학습됨")
     
     # 연속 학습일 계산
     streak_days = 0
@@ -202,9 +209,9 @@ def update_user_statistics(session_id: str, db: Session):
     
     # 새로운 통계 (용어 학습 포함)
     new_stats = {
-        'total_learned': total_learned,
-        'total_terms_learned': total_terms_learned,
-        'total_terms_available': total_terms_learned,  # 프론트엔드 호환성
+        'total_learned': total_learned,  # 오늘까지 학습한 AI 정보 총 개수
+        'total_terms_learned': total_terms_learned,  # 오늘까지 학습한 용어 세트 총 개수
+        'total_terms_available': 60,  # 총 용어 수는 60개로 고정
         'streak_days': streak_days,
         'max_streak': current_stats.get('max_streak', streak_days),  # 최대 연속일
         'last_learned_date': last_learned_date,
@@ -331,8 +338,8 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
     # 전체 누적 퀴즈 점수 계산
     cumulative_quiz_score = int((total_quiz_correct / total_quiz_questions) * 100) if total_quiz_questions > 0 else 0
     
-    # 총 AI 정보 수 계산 (모든 날짜의 AI 정보 수)
-    total_ai_info_available = 0
+    # 총 AI 정보 수 계산 (오늘까지 학습한 AI 정보의 총 개수)
+    total_ai_info_learned = 0
     all_ai_progress = db.query(UserProgress).filter(
         UserProgress.session_id == session_id,
         ~UserProgress.date.like('__%')
@@ -342,9 +349,13 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         if p.learned_info:
             try:
                 learned_data = json.loads(p.learned_info)
-                total_ai_info_available += len(learned_data)
+                total_ai_info_learned += len(learned_data)
+                print(f"📊 AI 정보 학습 기록: {p.date} - {len(learned_data)}개 학습됨")
             except json.JSONDecodeError:
+                print(f"❌ AI 정보 JSON 파싱 에러: {p.date}")
                 continue
+    
+    print(f"📈 총 AI 정보 학습 수: {total_ai_info_learned}개")
     
     # 총 용어 수 계산 (모든 날짜의 고유한 용어 수)
     total_terms_available = 0
@@ -383,6 +394,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
             'today_quiz_score': today_quiz_score,
             'today_quiz_correct': today_quiz_correct,
             'today_quiz_total': today_quiz_total,
+            'total_learned': total_ai_info_learned,  # 누적 총 학습 수 추가
             'total_ai_info_available': 3,  # 총 AI 정보 수는 3개로 고정
             'total_terms_available': 60,  # 총 용어 수는 60개로 고정
             'total_terms_learned': total_terms_available,  # 누적 총 용어 학습 수 (오늘까지 학습한 용어 총 개수)
@@ -393,7 +405,7 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         return stats
     
     return {
-        'total_learned': total_ai_info_available,  # 누적 총 학습 수 (오늘까지 학습한 AI 정보 총 개수)
+        'total_learned': total_ai_info_learned,  # 누적 총 학습 수 (오늘까지 학습한 AI 정보 총 개수)
         'streak_days': 0,
         'last_learned_date': None,
         'quiz_score': 0,
