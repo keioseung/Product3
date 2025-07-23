@@ -142,16 +142,21 @@ def update_user_statistics(session_id: str, db: Session):
     learned_dates = []
     
     # AI 정보 학습 통계 (오늘까지 학습한 AI 정보의 총 개수)
+    print(f"🔍 update_user_statistics: AI 정보 학습 기록 조회 - session_id={session_id}, 총 {len(ai_progress)}개 기록")
+    
     for p in ai_progress:
+        print(f"📋 update_user_statistics: AI 정보 기록 확인 - date={p.date}, learned_info={p.learned_info}")
         if p.learned_info:
             try:
                 learned_data = json.loads(p.learned_info)
                 total_learned += len(learned_data)
                 learned_dates.append(p.date)
-                print(f"📊 AI 정보 학습 기록: {p.date} - {len(learned_data)}개 학습됨")
-            except json.JSONDecodeError:
-                print(f"❌ AI 정보 JSON 파싱 에러: {p.date}")
+                print(f"📊 AI 정보 학습 기록: {p.date} - {len(learned_data)}개 학습됨 (learned_data: {learned_data})")
+            except json.JSONDecodeError as e:
+                print(f"❌ AI 정보 JSON 파싱 에러: {p.date} - {e}")
                 continue
+        else:
+            print(f"⚠️ update_user_statistics: AI 정보 기록에 learned_info가 없음 - {p.date}")
     
     # 용어 학습 통계 (info_index 기준으로 중복 제거)
     learned_info_indices = set()
@@ -616,15 +621,21 @@ def get_user_stats(session_id: str, db: Session = Depends(get_db)):
         ~UserProgress.date.like('__%')
     ).all()
     
+    print(f"🔍 AI 정보 학습 기록 조회: session_id={session_id}, 총 {len(all_ai_progress)}개 기록")
+    
     total_learned = 0
     for progress in all_ai_progress:
+        print(f"📋 AI 정보 기록 확인: date={progress.date}, learned_info={progress.learned_info}")
         if progress.learned_info:
             try:
-                total_learned += len(json.loads(progress.learned_info))
-                print(f"📊 AI 정보 학습 기록: {progress.date} - {len(json.loads(progress.learned_info))}개 학습됨")
-            except json.JSONDecodeError:
-                print(f"❌ AI 정보 JSON 파싱 에러: {progress.date}")
+                learned_data = json.loads(progress.learned_info)
+                total_learned += len(learned_data)
+                print(f"📊 AI 정보 학습 기록: {progress.date} - {len(learned_data)}개 학습됨 (learned_data: {learned_data})")
+            except json.JSONDecodeError as e:
+                print(f"❌ AI 정보 JSON 파싱 에러: {progress.date} - {e}")
                 continue
+        else:
+            print(f"⚠️ AI 정보 기록에 learned_info가 없음: {progress.date}")
     
     print(f"📈 총 AI 정보 학습 수: {total_learned}개")
     
